@@ -2338,7 +2338,7 @@ body:has(.nav-links.active) {
   color: var(--color-dark, #101820);
   border: 2px solid var(--color-primary, #ff8c42);
   border-radius: 12px;
-  box-shadow: 0 8px 30px rgb(0 0 0 / 20%);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
 }
 .cookie-banner h2 { margin: 0 0 0.5rem; font-size: 1.1rem; }
 .cookie-banner p { margin: 0; font-size: 0.9rem; line-height: 1.5; }
@@ -2354,7 +2354,7 @@ body:has(.nav-links.active) {
 
 /* Keep secondary contact actions legible over photographic hero backgrounds. */
 .hero .btn-secondary {
-  background-color: rgb(16 24 32 / 90%);
+  background-color: rgba(16, 24, 32, 0.9);
   color: #fff;
   border-color: var(--color-primary);
 }
