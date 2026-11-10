@@ -1,9 +1,6 @@
-/* ==========================================================================
-   BMS VENTOUSE – COMPONENTS CSS (boutons, FAQ, animations, etc.)
-   ========================================================================== */
+/* === components.css === */
 
-/* 4. COMPOSANTS PRINCIPAUX (Boutons, Cartes, etc.) */
-
+/* Boutons */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -15,9 +12,10 @@
   border-radius: var(--border-radius-pill);
   padding: 0.9rem 1.7rem;
   cursor: pointer;
-  transition: background 0.2s ease-in-out, 
-              transform 0.2s ease-out,
-              box-shadow 0.2s ease;
+  transition: transform 0.2s ease-out,
+              box-shadow 0.2s ease,
+              background-color 0.2s ease-in-out,
+              color 0.2s ease-in-out;
   box-shadow: 0 2px 12px rgba(0,0,0,0.12);
   text-decoration: none;
   min-width: 210px;
@@ -27,8 +25,6 @@
   z-index: var(--z-normal);
 }
 
-/* Sur très petits écrans, on autorise des boutons plus compacts
-   pour éviter de casser la mise en page (tout en gardant des cibles tactiles confortables) */
 @media (max-width: 480px) {
   .btn {
     min-width: 0;
@@ -38,7 +34,6 @@
   }
 }
 
-/* Effet ripple sur boutons */
 .btn::after {
   content: '';
   position: absolute;
@@ -60,15 +55,15 @@
 }
 
 .btn-primary {
-  /* Bouton principal sur fond sombre pour respecter le contraste WCAG */
-  background-color: var(--color-primary-dark);
+  background-color: #ba5312;
   color: #ffffff;
-  border-color: var(--color-primary-dark);
+  border-color: #ba5312;
+  font-weight: 800;
 }
 
 .btn-primary:hover,
 .btn-primary:focus {
-  background-color: #9d4510; /* encore un peu plus sombre au survol */
+  background-color: #9d4510;
   color: #ffffff;
 }
 
@@ -79,7 +74,7 @@
   box-shadow: none;
 }
 
-/* Variante plus douce pour les boutons secondaires alternatifs (ex : email sur /contact-nfc/) */
+/* Variante plus douce secondaire */
 .btn-secondary-alt {
   background: rgba(15, 23, 42, 0.03);
   border: 1px solid rgba(15, 23, 42, 0.12);
@@ -101,15 +96,16 @@
 }
 
 .btn-whatsapp {
-  background-color: #25d366;
+  background-color: #075e54;
   color: #fff;
-  border-color: #25d366;
+  border-color: #075e54;
 }
 
 .btn-whatsapp:hover,
 .btn-whatsapp:focus {
-  background-color: #1ebd5a;
+  background-color: #064c44;
   color: #fff;
+  border-color: #064c44;
 }
 
 .btn svg {
@@ -119,14 +115,14 @@
   margin-right: 0.6em;
   vertical-align: middle;
   flex-shrink: 0;
-  fill: currentColor; /* forcer l'héritage de la couleur du texte */
+  fill: currentColor;
   background: rgba(255, 255, 255, 0.25);
   border-radius: 50%;
   padding: 4px;
   box-shadow: 0 1px 4px rgba(0,0,0,0.15);
 }
 
-/* État de chargement du bouton */
+/* État loading */
 .btn.loading {
   pointer-events: none;
   color: transparent !important;
@@ -152,7 +148,7 @@
   to { transform: rotate(360deg); }
 }
 
-/* Cartes de service et contact */
+/* Cartes service/contact */
 .service-card,
 .contact-card {
   background: var(--color-light);
@@ -160,11 +156,14 @@
   text-align: center;
   padding: 2.5rem 2rem;
   box-shadow: var(--box-shadow-base);
-  transition: var(--transition-smooth);
+  transition: transform 0.3s ease,
+              box-shadow 0.3s ease,
+              border-color 0.3s ease,
+              background-color 0.3s ease,
+              color 0.3s ease;
   height: 100%;
   display: flex;
   flex-direction: column;
-  /* Bordure plus visible pour le contraste des cartes */
   border: 1px solid #d1d5db;
 }
 
@@ -175,7 +174,6 @@
   border-color: var(--color-border);
 }
 
-/* Icône générique dans les cartes */
 .service-icon,
 .contact-icon {
   font-size: 2.5rem;
@@ -183,7 +181,6 @@
   margin-bottom: 1.5rem;
 }
 
-/* Centrage fort des icônes de services */
 .service-card .service-icon {
   display: grid;
   place-items: center;
@@ -193,7 +190,6 @@
   color: var(--color-primary);
 }
 
-/* Icône interne des cartes de services */
 .service-card .service-icon svg {
   display: block;
   width: 32px;
@@ -201,7 +197,6 @@
   margin: 0 auto;
 }
 
-/* Titres et textes dans les cartes */
 .service-card h3,
 .contact-card h3 {
   font-size: 1.3rem;
@@ -216,20 +211,94 @@
   flex-grow: 1;
 }
 
-/* Petites notes explicatives (tarifs, conditions, etc.) */
+/* Cartes visuelles (image + texte) pour la page Services et certaines landings */
+.service-card-visual {
+  background: var(--color-light);
+  border-radius: var(--border-radius-large);
+  box-shadow: var(--box-shadow-base);
+  border: 1px solid var(--color-border);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: transform 0.3s ease,
+              box-shadow 0.3s ease,
+              border-color 0.3s ease,
+              background-color 0.3s ease,
+              color 0.3s ease;
+  position: relative;
+}
+
+/* Lien couvrant toute la carte pour rendre la carte cliquable sans casser l'accessibilité */
+.service-card-visual-link {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* On s'assure que le contenu reste au-dessus du lien pour rester sélectionnable et lisible */
+.service-card-visual-image,
+.service-card-visual-content {
+  position: relative;
+  z-index: 2;
+}
+
+.service-card-visual-image img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.service-card-visual-content {
+  padding: 1.5rem 1.75rem 2rem;
+  text-align: left;
+}
+
+.service-card-visual h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.75rem;
+  font-weight: var(--font-weight-bold);
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.service-card-visual p {
+  color: var(--color-text-muted);
+  margin-bottom: 0.75rem;
+}
+
+.service-card-visual ul {
+  margin: 0;
+  padding-left: 1.2rem;
+  color: var(--color-text-muted);
+}
+
+.service-card-visual li {
+  margin-bottom: 0.25rem;
+}
+
+.service-card-visual:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--box-shadow-hover);
+  border-color: var(--color-border);
+}
+
 .note-text {
   font-size: 0.9rem;
   color: var(--color-text);
 }
 
-/* Texte secondaire discret (notes, options, mentions) */
 .text-muted {
   font-size: 0.95rem;
   color: var(--color-text-muted);
   margin-top: 0.5rem;
 }
 
-/* Bloc de texte central étroit (paragraphes explicatifs, SEO) */
 .content-narrow {
   max-width: 900px;
   margin: 0 auto;
@@ -260,395 +329,3 @@
   border-color: rgba(255, 215, 0, 0.2); 
 }
 
-/* ================== BLOC FAQ (composant réutilisable) ================== */
-
-.faq-container {
-  display: grid;
-  gap: 1.5rem;
-}
-
-.faq-item {
-  border: 1px solid var(--color-border);
-  border-radius: var(--border-radius-large);
-  box-shadow: var(--box-shadow-base);
-  overflow: hidden;
-  transition: var(--transition-base);
-}
-
-.faq-item:hover {
-  border-color: var(--color-primary);
-  transform: translateY(-2px);
-}
-
-.faq-question {
-  background-color: var(--color-light);
-  color: #111827;
-  padding: 1rem 1.5rem;
-  width: 100%;
-  text-align: left;
-  font-weight: var(--font-weight-medium);
-  cursor: pointer;
-  border: none;
-  position: relative;
-  transition: background-color 0.3s;
-}
-
-.faq-question::after {
-  content: "";
-  position: absolute;
-  right: 1rem;
-  top: 50%;
-  width: 0.5rem;
-  height: 0.5rem;
-  border-right: 2px solid currentColor;
-  border-bottom: 2px solid currentColor;
-  transform: translateY(-50%) rotate(45deg);
-  transition: transform 0.3s;
-}
-
-.faq-item.is-open .faq-question::after {
-  transform: translateY(-50%) rotate(-135deg);
-}
-
-.faq-item.is-open .faq-question {
-  color: var(--color-primary);
-  background-color: rgba(255, 140, 66, 0.05);
-}
-
-.faq-answer {
-  max-height: 0;
-  overflow: hidden;
-  background-color: var(--color-light-alt);
-  padding: 0 1.5rem;
-  transition: max-height 0.3s cubic-bezier(.4,0,.2,1), padding 0.3s;
-  color: #374151;
-}
-
-.faq-answer p {
-  margin: 0 0 0.75rem;
-}
-
-.faq-answer p:last-child {
-  margin-bottom: 0;
-}
-
-.faq-item.is-open .faq-answer {
-  padding: 1rem 1.5rem;
-  animation: faqFade 0.2s ease both;
-}
-
-@media (max-width: 600px) {
-  .faq-answer, 
-  .faq-item.is-open .faq-answer {
-    padding-left: 0.7rem;
-    padding-right: 0.7rem;
-  }
-}
-
-/* FAQ: fade-in du contenu lors de l'ouverture */
-@keyframes faqFade {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-/* ================== ANIMATIONS GLOBALES ================== */
-
-.animated-item {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
-  will-change: opacity, transform;
-}
-
-.animated-item.is-visible {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Soulignement animé des liens de navigation (depuis le centre) */
-.nav-link::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  bottom: 6px;
-  width: 60%;
-  height: 2px;
-  background: currentColor;
-  transform: translateX(-50%) scaleX(0);
-  transform-origin: center;
-  transition: transform 0.3s ease;
-  opacity: 0.7;
-}
-
-.nav-link:hover::after,
-.nav-link.active::after {
-  transform: translateX(-50%) scaleX(1);
-}
-
-/* Accent de bordure en haut des cartes (apparition au hover) */
-.service-card,
-.contact-card,
-.service-card-visual,
-.reference-card,
-.zone-card,
-.stat-item,
-.coverage-note-card {
-  position: relative;
-}
-
-.service-card::before,
-.service-card-visual::before,
-.reference-card::before,
-.zone-card::before,
-.stat-item::before,
-.coverage-note-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 3px;
-  background: var(--color-primary);
-  transform: scaleX(0);
-  transform-origin: center;
-  transition: transform 0.3s ease-out;
-}
-
-.service-card:hover::before,
-.service-card-visual:hover::before,
-.reference-card:hover::before,
-.zone-card:hover::before,
-.stat-item:hover::before,
-.coverage-note-card:hover::before {
-  transform: scaleX(1);
-}
-
-/* Hover intensifié sur les boutons CTA */
-.btn:hover,
-.btn:focus {
-  transform: translateY(-3px) scale(1.05);
-  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
-  filter: brightness(1.08);
-}
-
-.btn:active {
-  transform: translateY(0) scale(0.98);
-}
-
-/* ================== DARK THEME – COMPOSANTS ================== */
-
-body.dark-theme {
-  background: #0f172a;
-  color: #f1f5f9;
-}
-
-body.dark-theme a {
-  color: var(--color-primary);
-}
-
-body.dark-theme a:hover {
-  color: var(--color-primary-dark);
-}
-
-body.dark-theme .section {
-  background: #1e293b;
-}
-
-body.dark-theme .section-subtitle {
-  color: #cbd5e1;
-}
-
-body.dark-theme .service-card,
-body.dark-theme .coverage-note-card,
-body.dark-theme .faq-item {
-  background: #1e293b;
-  border-color: #475569;
-  color: #f1f5f9;
-}
-
-body.dark-theme .faq-question {
-  color: #f1f5f9;
-}
-
-body.dark-theme .faq-answer {
-  color: #e2e8f0;
-}
-
-body.dark-theme .btn-secondary {
-  background: transparent;
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-}
-
-/* Variante dark pour les boutons secondaires alternatifs (email, etc.) */
-body.dark-theme .btn-secondary-alt {
-  background: #111827;
-  border: 1px solid #4b5563;
-  color: #e5e7eb;
-}
-
-/* Bouton WhatsApp assombri en mode sombre pour réduire le contraste avec l'orange */
-body.dark-theme .btn-whatsapp {
-  background-color: #15803d;
-  border-color: #15803d;
-  color: #e5e7eb;
-}
-
-body.dark-theme .btn-whatsapp:hover,
-body.dark-theme .btn-whatsapp:focus {
-  background-color: #166534;
-  border-color: #166534;
-  color: #f9fafb;
-}
-
-/* Texte lisible sur les blocs d'appel à l'action en mode sombre */
-body.dark-theme .cta-section {
-  background: linear-gradient(135deg, #0b1220 0%, #1e293b 100%);
-  color: #e5edf5;
-}
-
-body.dark-theme .cta-section .cta-title,
-body.dark-theme .cta-section .cta-subtitle,
-body.dark-theme .cta-section p {
-  color: #e5edf5;
-}
-
-/* Lien en bas de page (copyright) plus clair en mode sombre */
-body.dark-theme .footer-bottom-content {
-  color: #cbd5e1;
-}
-
-body.dark-theme .footer-bottom-content a {
-  color: #e5edf5;
-}
-
-/* Bannière promo : texte clair en mode sombre */
-body.dark-theme .promo-banner {
-  color: #f9fafb !important;
-}
-
-/* ================== POP-UP PARIS FASHION WEEK 2026 ================== */
-
-.fw-popup {
-  position: fixed;
-  inset: 0;
-  background: rgba(15, 23, 42, 0.65);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 9999;
-  padding: 1.5rem;
-}
-
-.fw-popup[aria-hidden="false"] {
-  display: flex;
-}
-
-.fw-popup-content {
-  position: relative;
-  background: var(--color-surface, #ffffff);
-  color: var(--color-text, #111111);
-  max-width: 520px;
-  width: 100%;
-  padding: 1.9rem 1.8rem 1.6rem;
-  border-radius: 18px;
-  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.35);
-  max-height: 90vh;
-  overflow-y: auto;
-}
-
-.fw-popup-content h2 {
-  font-size: 1.35rem;
-  margin: 0 0 0.75rem;
-}
-
-.fw-popup-content p {
-  margin: 0 0 1.1rem;
-  line-height: 1.7;
-  font-size: 0.98rem;
-}
-
-.fw-popup-content strong {
-  font-weight: var(--font-weight-bold);
-}
-
-.fw-popup-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.6rem;
-}
-
-.fw-popup-actions .btn {
-  min-width: 0;
-  flex: 1 1 48%;
-}
-
-.fw-popup-close {
-  border: none;
-  background: transparent;
-  font-size: 1.6rem;
-  position: absolute;
-  top: 0.6rem;
-  right: 0.9rem;
-  cursor: pointer;
-  line-height: 1;
-  color: #9ca3af;
-  transition: color 0.2s ease;
-}
-
-.fw-popup-close:hover,
-.fw-popup-close:focus {
-  color: #4b5563;
-}
-
-/* Mobile: pop-up pleine largeur, boutons empilés */
-@media (max-width: 600px) {
-  .fw-popup {
-    padding: 0.75rem;
-    align-items: flex-end;
-  }
-
-  .fw-popup-content {
-    width: 100%;
-    border-radius: 18px 18px 0 0;
-    padding: 1.6rem 1.3rem 1.4rem;
-    max-height: 80vh;
-  }
-
-  .fw-popup-content h2 {
-    font-size: 1.2rem;
-  }
-
-  .fw-popup-content p {
-    font-size: 0.95rem;
-  }
-
-  .fw-popup-actions {
-    flex-direction: column;
-  }
-
-  .fw-popup-actions .btn {
-    width: 100%;
-    flex: 1 1 auto;
-  }
-
-  .fw-popup-close {
-    top: 0.5rem;
-    right: 0.8rem;
-  }
-}
-
-/* Variante en mode sombre pour garder un bon contraste */
-body.dark-theme .fw-popup-content {
-  background: #0b1220;
-  color: #e5e7eb;
-}
-
-body.dark-theme .fw-popup-close {
-  color: #9ca3af;
-}
-
-body.dark-theme .fw-popup-close:hover,
-body.dark-theme .fw-popup-close:focus {
-  color: #e5e7eb;
-}
