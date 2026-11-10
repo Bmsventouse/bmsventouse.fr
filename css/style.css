@@ -273,22 +273,30 @@ p {
 }
 
 html[lang="fr"] .promo-banner strong::before {
-  content: "Réponse en moins de 24H";
+  content: "Premier retour sous 24h";
   font-size: 0.95rem;
   font-weight: 700;
 }
 
 html[lang="en"] .promo-banner strong::before {
-  content: "-10% on your next film shoot in France";
+  content: "First response within 24h";
   font-size: 0.95rem;
   font-weight: 700;
 }
 
+/* Accueil : le message réellement lu et indexé correspond au message visible.
+   Les autres pages seront harmonisées lors de leur audit page par page. */
+body.page-accueil .promo-banner strong {
+  font-size: 0.95rem;
+}
+
+html body.page-accueil .promo-banner strong::before {
+  content: none;
+}
+
 /* Utilitaires de spacing (marges verticales) */
-.mt-0 { margin-top: 0 !important; }
 .mb-0 { margin-bottom: 0 !important; }
 
-.mt-xs { margin-top: 0.5rem !important; }
 .mt-sm { margin-top: 0.75rem !important; }
 .mt-md { margin-top: 1rem !important; }
 .mt-lg { margin-top: 1.5rem !important; }
@@ -300,8 +308,6 @@ html[lang="en"] .promo-banner strong::before {
 .mb-xs { margin-bottom: 0.5rem !important; }
 .mb-sm { margin-bottom: 0.75rem !important; }
 .mb-md { margin-bottom: 1rem !important; }
-.mb-lg { margin-bottom: 1.5rem !important; }
-.mb-xl { margin-bottom: 2rem !important; }
 
 /* Header sticky */
 .header {
@@ -315,19 +321,6 @@ html[lang="en"] .promo-banner strong::before {
   -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--color-border);
   transition: transform 0.3s ease, background 0.4s;
-}
-
-.header.header-hidden {
-  transform: translateY(-100%);
-}
-
-.header.header-transparent {
-  background: transparent;
-  border-bottom: none;
-}
-
-.header.header-transparent .nav-link {
-  color: #ffffff;
 }
 
 body.dark-theme .header { 
@@ -1062,18 +1055,6 @@ body.dark-theme .header {
   display: inline-block;
 }
 
-.badge-netflix { 
-  background: rgba(229, 9, 20, 0.1); 
-  color: #e50914; 
-  border-color: rgba(229, 9, 20, 0.2); 
-}
-
-.badge-jo { 
-  background: rgba(255, 215, 0, 0.1); 
-  color: #b7950b; 
-  border-color: rgba(255, 215, 0, 0.2); 
-}
-
 /* FAQ composant */
 .faq-container {
   display: grid;
@@ -1129,12 +1110,17 @@ body.dark-theme .header {
 }
 
 .faq-answer {
-  max-height: 0;
-  overflow: hidden;
+  /* Let every expanded answer grow naturally, regardless of its length. */
+  max-height: none;
+  overflow: visible;
   background-color: var(--color-light-alt);
-  padding: 0 1.5rem;
-  transition: max-height 0.3s cubic-bezier(.4,0,.2,1), padding 0.3s;
+  padding: 1rem 1.5rem;
   color: #374151;
+}
+
+/* Explicit hiding also works if other CSS rules override [hidden]. */
+.faq-answer[hidden] {
+  display: none;
 }
 
 .faq-answer p {
@@ -1164,16 +1150,30 @@ body.dark-theme .header {
 }
 
 /* Animations globales */
+/* Progressive enhancement: content is readable without JavaScript. */
 .animated-item {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
-  will-change: opacity, transform;
+  opacity: 1;
+  transform: none;
 }
 
-.animated-item.is-visible {
+/* Only hide elements when an observer is active and motion is allowed. */
+.js-animations .animated-item:not(.is-visible) {
+  opacity: 0;
+  transform: translateY(20px);
+}
+.js-animations .animated-item {
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.js-animations .animated-item.is-visible {
   opacity: 1;
   transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .js-animations .animated-item {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }
 
 /* Soulignement animé des nav-link */
@@ -1580,62 +1580,7 @@ body.dark-theme .fw-popup-close:focus {
   border-color: rgba(255, 255, 255, 0.45);
   color: #fff;
 }
-/* Ajustement des titres de Héros pour éviter le texte tronqué sur mobile
-   tout en restant lisible — limité aux petits écrans (smartphones) pour
-   préserver le rendu “grand format” sur tablette/desktop */
-@media (max-width: 600px) {
-  .hero h1 {
-    font-size: clamp(1.6rem, 5.2vw, 2.3rem);
-    line-height: 1.18;
-  }
-}
-
-.hero p {
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  margin-bottom: 1.5rem;
-  opacity: 0.97;
-  max-width: 90vw;
-  margin-left: auto;
-  margin-right: auto;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-@media (min-width: 768px) {
-  .hero p {
-    max-width: 38rem;
-  }
-}
-
-.hero-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.1rem;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-}
-
-@media (max-width: 600px) {
-  .hero-buttons {
-    flex-direction: column;
-  }
-}
-
-@media (min-width: 601px) {
-  .hero-buttons {
-    flex-direction: row;
-  }
-}
-
-.hero-buttons .btn {
-  max-width: 100%;
-  min-width: 0;
-  white-space: normal;
-  overflow-wrap: anywhere;
-}
+/* Les réglages finaux du hero sont regroupés dans pages.css. */
 
 .testimonial-card p {
   font-style: italic;
@@ -1661,13 +1606,6 @@ body.dark-theme .fw-popup-close:focus {
   display: flex;
   align-items: center;
   gap: 1rem;
-}
-
-.testimonial-card footer .client-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
 }
 
 .testimonial-card footer span { 
@@ -1759,30 +1697,6 @@ body.dark-theme .fw-popup-close:focus {
   margin-bottom: 1rem;
 }
 
-.case-challenge {
-  font-weight: var(--font-weight-medium);
-  margin-bottom: 1.5rem;
-  line-height: 1.5;
-}
-
-.case-solution {
-  list-style: none;
-  margin-bottom: 1.5rem;
-}
-
-.case-solution li {
-  margin-bottom: 0.5rem;
-  display: flex;
-  align-items: flex-start;
-}
-
-.case-solution i {
-  color: var(--color-primary);
-  margin-right: 0.8rem;
-  margin-top: 4px;
-  flex-shrink: 0;
-}
-
 .testimonial-inline {
   border-left: 3px solid var(--color-primary);
   padding-left: 1.5rem;
@@ -1808,27 +1722,6 @@ body.dark-theme .fw-popup-close:focus {
 .testimonial-inline footer { 
   font-weight: var(--font-weight-bold); 
   margin-top: 0.5rem; 
-}
-
-.references-logos {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 2rem;
-}
-
-.references-logos img {
-  height: 45px;
-  opacity: 0.7;
-  transition: opacity 0.3s, transform 0.3s;
-  filter: grayscale(100%);
-}
-
-.references-logos img:hover { 
-  opacity: 1; 
-  transform: translateY(-3px);
-  filter: grayscale(0%);
 }
 
 /* WhatsApp float */
@@ -2125,16 +2018,6 @@ body.page-contact-nfc .hero-contact-nfc .hero-devis.badge {
   border-radius: 999px;
 }
 
-body.page-contact-nfc .hero-subnote {
-  font-size: 0.9rem;
-  opacity: 0.85;
-  margin-top: 0.5rem;
-}
-
-body.page-contact-nfc .header.header-nfc .nav {
-  justify-content: center;
-}
-
 body.page-contact-nfc .hero-tag {
   margin-bottom: 0.5rem;
   font-size: 0.78rem;
@@ -2152,8 +2035,9 @@ body.page-contact-nfc .hero h1 {
    préserver le rendu “grand format” sur tablette/desktop */
 @media (max-width: 600px) {
   .hero h1 {
-    font-size: clamp(1.6rem, 5.2vw, 2.3rem);
-    line-height: 1.18;
+    font-size: clamp(1.55rem, 5vw, 1.9rem);
+    line-height: 1.16;
+    text-wrap: balance;
   }
 }
 
@@ -2235,13 +2119,166 @@ body.dark-theme.page-contact-nfc .hero-contact-nfc .dev-credit a:focus {
   color: var(--color-primary);
 }
 
-/* === Overrides & utilitaires de style.css === */
 
-/* Marqueur notranslate (préserve les termes métier) */
-.notranslate[translate="no"],
-.notranslate {
-  /* Pas de style visuel, uniquement un marqueur pour les traducteurs. */
+/* Accueil P2 — services prioritaires et parcours de demande */
+body.page-accueil #hero-home .hero-overlay p {
+  display: block;
+  -webkit-line-clamp: unset;
+  overflow: visible;
+  max-width: 42rem;
+  margin-bottom: 0.9rem;
+  text-wrap: pretty;
 }
+.section-services-home .section-subtitle { margin-bottom: 2rem; }
+.home-service-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+.home-service-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.8rem;
+  background: var(--color-light);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-large);
+  padding: clamp(1.2rem, 2.7vw, 2rem);
+  box-shadow: var(--box-shadow-base);
+  min-width: 0;
+}
+.home-service-number {
+  font-weight: 800;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  color: var(--color-primary-dark);
+}
+.home-service-card h3 {
+  font-size: clamp(1.2rem, 2.3vw, 1.5rem);
+  line-height: 1.25;
+  margin: 0;
+}
+.home-service-card h3 a { color: var(--color-dark); }
+.home-service-card h3 a:hover { color: var(--color-primary-dark); }
+.home-service-card p {
+  margin: 0;
+  color: var(--color-text-muted);
+  line-height: 1.55;
+  flex: 1;
+}
+.home-service-link {
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.home-related-services {
+  margin-top: 1.5rem;
+  text-align: center;
+  line-height: 1.8;
+}
+.home-related-services h3 { font-size: 1.1rem; margin-bottom: 0.4rem; }
+.home-related-services p { margin: 0; }
+.home-related-services a { color: var(--color-primary-dark); text-decoration: underline; text-underline-offset: 3px; }
+.home-related-services span { padding: 0 0.45rem; color: var(--color-text-muted); }
+.section-home-process { background: var(--color-light-alt); }
+.home-process-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+.home-process-step {
+  min-width: 0;
+  padding: 1.4rem;
+  background: var(--color-light);
+  border-radius: var(--border-radius-large);
+  border: 1px solid var(--color-border);
+}
+.home-process-index {
+  display: inline-grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: var(--color-primary-dark);
+  color: #fff;
+  font-weight: 700;
+  margin-bottom: 0.85rem;
+}
+.home-process-step h3 { font-size: 1.12rem; margin-bottom: 0.55rem; }
+.home-process-step p { margin: 0; color: var(--color-text-muted); line-height: 1.55; }
+@media (max-width: 720px) {
+  .home-service-grid { grid-template-columns: 1fr; gap: 0.85rem; }
+  .home-process-grid { grid-template-columns: 1fr; gap: 0.85rem; }
+  .home-related-services { text-align: left; }
+  .home-related-services span { padding: 0 0.2rem; }
+}
+
+/* Ventousage Paris : rendre la présentation complète sans toucher au responsive. */
+body.page-ventousage-paris .hero-overlay p {
+  display: block;
+  -webkit-line-clamp: unset;
+  overflow: visible;
+  max-width: 44rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0.9rem;
+  text-wrap: pretty;
+}
+
+/* Sécurité plateaux : description du héros entière sur tous les écrans. */
+body.page-securite-plateaux .hero-overlay p {
+  display: block;
+  -webkit-line-clamp: unset;
+  overflow: visible;
+  max-width: 44rem;
+  margin: 0 auto 0.9rem;
+}
+
+/* Ventousage Paris : conversion légère, sans framework ni blocage du contenu. */
+.bms-vp-lead-layout { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); align-items: start; gap: clamp(1.5rem, 4vw, 3.5rem); }
+.bms-vp-lead-intro h2 { margin: 0 0 0.8rem; line-height: 1.18; }
+.bms-vp-lead-intro p { line-height: 1.65; margin-bottom: 1rem; }
+.bms-vp-lead-disclaimer { font-size: 0.9rem; color: var(--color-text-muted); }
+.bms-vp-form { background: var(--color-light); border: 1px solid var(--color-border); border-radius: 14px; padding: clamp(1rem, 3vw, 1.65rem); box-shadow: var(--box-shadow-base); color: var(--color-dark); }
+.bms-vp-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.95rem; }
+.bms-vp-form-grid label { display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.93rem; font-weight: 600; min-width: 0; }
+.bms-vp-form-grid input { box-sizing: border-box; width: 100%; min-height: 46px; padding: 0.7rem; background: #fff; color: #1f2937; border: 1px solid #64748b; border-radius: 8px; font: inherit; }
+.bms-vp-form-grid input:focus-visible, .bms-vp-mobile-actions a:focus-visible { outline: 3px solid var(--color-primary-dark); outline-offset: 2px; }
+.bms-vp-privacy, .bms-vp-form-note { font-size: 0.83rem; line-height: 1.45; margin: 1rem 0 0.65rem; color: var(--color-text-muted); }
+.bms-vp-form .bms-vp-submit { width: 100%; min-height: 48px; cursor: pointer; }
+.bms-vp-form-note { text-align: center; margin-bottom: 0; }
+.bms-vp-honeypot { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.bms-vp-mobile-actions { display: none; }
+@media (max-width: 800px) {
+  .bms-vp-lead-layout { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .bms-vp-form-grid { grid-template-columns: 1fr; }
+  body.page-ventousage-paris { padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)); }
+  .bms-vp-mobile-actions { display: grid; grid-template-columns: 1fr 1fr; position: fixed; bottom: 0; left: 0; right: 0; z-index: 1800; gap: 0.55rem; padding: 0.55rem max(0.8rem, env(safe-area-inset-left, 0px)) calc(0.55rem + env(safe-area-inset-bottom, 0px)) max(0.8rem, env(safe-area-inset-right, 0px)); background: var(--color-light); border-top: 1px solid var(--color-border); box-shadow: 0 -4px 18px rgba(0,0,0,0.12); }
+  .bms-vp-mobile-actions a { display: grid; place-items: center; border-radius: 8px; padding: 0.7rem 0.3rem; min-height: 44px; text-align: center; font-weight: 700; line-height: 1.15; text-decoration: none; }
+  .bms-vp-mobile-primary { background: var(--color-primary-dark); color: #fff !important; }
+  .bms-vp-mobile-secondary { background: #163624; color: #fff !important; }
+  body.page-ventousage-paris:has(#cookie-banner) .bms-vp-mobile-actions { display: none; }
+}
+
+/* Ventousage Paris — structure consolidée, formulaire après les missions réelles. */
+body.page-ventousage-paris .hero { height: auto; }
+body.page-ventousage-paris .hero-overlay { position: relative; inset: auto; min-height: clamp(460px, 65vh, 820px); }
+.bms-vp-case-photo { display: flex; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: 1.25rem; }
+.bms-vp-case-photo img { width: min(100%, 340px); height: auto; border-radius: 10px; }
+.bms-vp-case-photo p { flex: 1; min-width: 180px; }
+.bms-vp-aot-note { margin-top: 1.5rem; }
+.bms-vp-final-cta { margin-top: 2rem; padding: 1.3rem; border: 1px solid var(--color-border); border-radius: 12px; text-align: center; background: var(--color-light-alt); }
+.bms-vp-final-cta p { margin: 0 0 1rem; }
+.bms-vp-final-cta .btn { margin: 0.25rem; }
+@media (max-width: 640px) {
+ body.page-ventousage-paris .whatsapp-float { display: none; }
+ .bms-vp-final-cta .btn { display: flex; justify-content: center; width: 100%; margin: 0.4rem 0; }
+}
+/* === Overrides & utilitaires de style.css === */
 
 /* Ajustements spécifiques NFC, WhatsApp mobile et menu mobile
    (déjà en grande partie redéfinis plus haut, conservés pour compatibilité) */
@@ -2283,8 +2320,8 @@ body.dark-theme.page-contact-nfc .hero-contact-nfc .dev-credit a:focus {
   box-shadow: var(--box-shadow-base);
   animation: slideInDown 0.3s forwards;
   /* Hauteur restante de l'écran (iOS + fallback) */
-  height: calc(100dvh - var(--promo-banner-height) - var(--header-height));
   height: calc(100vh - var(--promo-banner-height) - var(--header-height));
+  height: calc(100dvh - var(--promo-banner-height) - var(--header-height));
   overflow-y: auto;
 }
 
@@ -2314,10 +2351,82 @@ body:has(.nav-links.active) {
   overflow: hidden;
 }
 
+/* Consent remains visible without changing BMS contact availability. */
+.cookie-banner {
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
+  z-index: 3000;
+  max-width: 900px;
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
+  margin: 0 auto;
+  padding: 1rem;
+  background: var(--color-light, #fff);
+  color: var(--color-dark, #101820);
+  border: 2px solid var(--color-primary, #ff8c42);
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+.cookie-banner h2 { margin: 0 0 0.5rem; font-size: 1.1rem; }
+.cookie-banner p { margin: 0; font-size: 0.9rem; line-height: 1.5; }
+.cookie-banner__content { display: flex; align-items: center; gap: 1rem; }
+.cookie-banner__actions { display: flex; flex-shrink: 0; gap: 0.75rem; }
+.cookie-banner__actions .btn { min-height: 44px; padding: 0.65rem 1rem; }
+.cookie-banner a { color: inherit; text-decoration: underline; }
+.cookie-banner :focus-visible { outline: 3px solid currentcolor; outline-offset: 3px; }
+@media (max-width: 640px) {
+  /* Compact, scrollable consent panel that remains usable with mobile browser bars. */
+  .cookie-banner {
+    bottom: max(0.5rem, env(safe-area-inset-bottom, 0px));
+    left: 0.65rem;
+    right: 0.65rem;
+    width: auto;
+    max-height: min(60dvh, 360px);
+    max-height: min(60svh, 360px);
+    padding: 0.8rem;
+    border-radius: 12px;
+    overscroll-behavior: contain;
+  }
+  .cookie-banner__content {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.65rem;
+  }
+  .cookie-banner h2 {
+    font-size: 1rem;
+    line-height: 1.2;
+    margin-bottom: 0.3rem;
+  }
+  .cookie-banner p {
+    font-size: 0.82rem;
+    line-height: 1.35;
+  }
+  .cookie-banner__actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem;
+  }
+  .cookie-banner__actions .btn {
+    width: 100%;
+    min-width: 0;
+    min-height: 44px;
+    margin: 0;
+    padding: 0.5rem 0.4rem;
+    font-size: 0.9rem;
+    line-height: 1.25;
+  }
+}
+@media (max-width: 340px) {
+  .cookie-banner__actions {
+    grid-template-columns: 1fr;
+  }
+}
 
-
-
-
-
-
-
+/* Keep secondary contact actions legible over photographic hero backgrounds. */
+.hero .btn-secondary {
+  background-color: rgba(16, 24, 32, 0.9);
+  color: #fff;
+  border-color: var(--color-primary);
+}

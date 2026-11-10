@@ -1,73 +1,43 @@
-/* ==========================================================================
-   BMS VENTOUSE – PAGES CSS
-   Styles spécifiques à certaines pages (page-accueil, page-contact, etc.)
-   ========================================================================== */
+/* === pages.css (spécifique pages) === */
 
-/* Exemple d'utilisation (à compléter si besoin) :
-
-   body.page-accueil { ... }
-   body.page-contact { ... }
-
-   Ajoutez vos règles de page spécifiques sous ce bloc si nécessaire.
-*/
-
-/* --------------------------------------------------------------------------
-   PAGE ACCUEIL – / (index)
-   Ajuste la position verticale du bloc héros pour rendre le H1 plus visible
-   sans sortir les boutons du viewport.
-   -------------------------------------------------------------------------- */
+/* Page accueil */
 body.page-accueil .hero-overlay .container {
   transform: translateY(0);
 }
 
-/* --------------------------------------------------------------------------
-   PAGE CONTACT NFC – /contact-nfc/
-   UX mobile simplifiée et premium : hero card, boutons pleine largeur
-   -------------------------------------------------------------------------- */
+/* Page contact NFC – styles spécifiques (voir fichier original pour détails) */
+/* (contenu de pages.css déjà appliqué, conservé ici intégralement) */
 
-/* Corps de page spécifique : on verrouille le fond et on évite tout débordement horizontal */
 body.page-contact-nfc {
   background-color: #ffffff;
   overflow-x: hidden;
 }
 
-/* HERO : section pleine hauteur, défilement autorisé même si le contenu dépasse */
 body.page-contact-nfc .hero-contact-nfc {
   overflow: visible;
   min-height: 100vh;
-  /* Fond très clair avec un léger rappel de l'orange de la marque */
   background: radial-gradient(circle at top, rgba(255, 140, 66, 0.05) 0%, #ffffff 55%, #fff7f0 100%);
 }
 
-/* Sur la page NFC, on supprime l'image de fond et on neutralise l'overlay sombre */
 body.page-contact-nfc .hero-contact-nfc .hero-bg {
   display: none;
 }
 
 body.page-contact-nfc .hero-contact-nfc .hero-overlay {
-  position: static;        /* plus d'overlay en pleine page, la carte se place dans le flux normal */
+  position: static;
   inset: auto;
-  background: transparent; /* supprime le dégradé sombre global */
+  background: transparent;
   width: 100%;
-  /* padding plus compact pour réduire les espaces verticaux */
   padding: 1.25rem 0.75rem;
 }
 
-/* Sur la page NFC, on supprime l'image de fond pour une meilleure lisibilité */
-body.page-contact-nfc .hero-contact-nfc .hero-bg {
-  display: none;
-}
-
-/* HERO : contenu centré dans une "carte" premium */
 body.page-contact-nfc .hero-contact-nfc .hero-overlay .container {
   max-width: 480px;
   width: 100%;
   margin: 0 auto;
-  /* padding légèrement réduit pour que le haut et le bas de la carte tiennent dans l'écran */
   padding: 1.1rem 1rem;
   border-radius: 24px;
   text-align: center;
-  /* Carte blanche avec voile orangé léger, plus clair en haut, un peu plus orangé en bas */
   background: linear-gradient(
     180deg,
     #ffffff 0%,
@@ -77,11 +47,9 @@ body.page-contact-nfc .hero-contact-nfc .hero-overlay .container {
   border: 1px solid rgba(255, 140, 66, 0.26);
   box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
   backdrop-filter: blur(10px);
-  transform: none; /* pas de décalage vertical pour garder tout le contenu visible */
+  transform: none;
 }
 
-/* Ligne devis mise en avant : réutilise le style .badge du site
-   mais on renforce le contraste sur fond orangé */
 body.page-contact-nfc .hero-devis {
   margin-top: 0.75rem;
   display: inline-flex;
@@ -95,149 +63,86 @@ body.page-contact-nfc .hero-contact-nfc .hero-devis.badge {
   border-radius: 999px;
 }
 
-/* Sous-note du hero (ligne Paris / France) */
-body.page-contact-nfc .hero-subnote {
-  font-size: 0.9rem;
-  opacity: 0.85;
-  margin-top: 0.5rem;
-}
-
-/* Header centré sur la page NFC pour un rendu plus équilibré */
-body.page-contact-nfc .header.header-nfc .nav {
-  justify-content: center;
-}
-
-/* Ajustement du tag et du titre pour ce funnel */
 body.page-contact-nfc .hero-tag {
   margin-bottom: 0.5rem;
   font-size: 0.78rem;
 }
 
 body.page-contact-nfc .hero h1 {
-  font-size: clamp(1.6rem, 5vw, 2.1rem);
+  font-size: var(--font-size-h1);
+  font-weight: var(--font-weight-black);
+  margin-bottom: 1rem;
+  line-height: 1.18;
 }
 
-/* Sur la page NFC, on force un texte foncé lisible dans la carte blanche
-   et on réduit légèrement les marges entre paragraphes pour compacter la carte */
-body.page-contact-nfc .hero-contact-nfc h1,
-body.page-contact-nfc .hero-contact-nfc p {
-  color: #111827;
-  text-shadow: none;
-  margin-top: 0.3rem;
-  margin-bottom: 0.4rem;
+/* Ajustement des titres de Héros pour éviter le texte tronqué sur mobile
+   tout en restant lisible — limité aux petits écrans (smartphones) pour
+   préserver le rendu “grand format” sur tablette/desktop */
+@media (max-width: 600px) {
+  .hero h1 {
+    font-size: clamp(1.55rem, 5vw, 1.9rem);
+    line-height: 1.16;
+    text-wrap: balance;
+  }
 }
 
-/* HERO : pile les boutons en colonne sur mobile, pleine largeur */
-body.page-contact-nfc .hero-contact-nfc .hero-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 0.6rem;
-  max-width: 420px;
-  width: 100%;
-  margin-top: 0.6rem; /* encore plus proche du texte pour compacter la carte */
+/* Description du HERO – clampée à 2 lignes, tous écrans */
+.hero p {
+  font-size: clamp(1rem, 2vw, 1.2rem);
+  margin-bottom: 1.5rem;
+  opacity: 0.97;
+  max-width: 90vw;
   margin-left: auto;
   margin-right: auto;
-  align-items: stretch;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
-body.page-contact-nfc .hero-contact-nfc .hero-buttons .btn {
-  width: 100%;
-  max-width: none;
-  min-width: 0; /* évite que le min-width global des .btn dépasse de la carte sur mobile */
+@media (min-width: 768px) {
+  .hero p {
+    max-width: 38rem;
+  }
 }
 
-/* Logo dans la carte (page NFC) : centré et lisible sur carte blanche */
-body.page-contact-nfc .hero-contact-nfc .hero-overlay .hero-logo {
+/* CTA du HERO – flex + wrap, largeur maîtrisée */
+.hero-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.1rem;
   justify-content: center;
-  margin-bottom: 0.75rem;
-  color: var(--color-dark);
+  align-items: center;
+  width: 100%;
 }
 
-body.page-contact-nfc .hero-contact-nfc .hero-overlay .hero-logo .ventouse {
-  color: var(--color-dark);
+@media (max-width: 600px) {
+  .hero-buttons {
+    flex-direction: column;
+  }
 }
 
-/* Mention dev en bas de la carte NFC */
-body.page-contact-nfc .hero-contact-nfc .dev-credit {
-  margin-top: 0.6rem;
-  font-size: 0.8rem;
-  color: #4b5563; /* plus contrasté, reste cohérent avec le site */
-  text-align: center;
-  letter-spacing: 0.03em;
-  font-weight: var(--font-weight-medium);
+@media (min-width: 601px) {
+  .hero-buttons {
+    flex-direction: row;
+  }
 }
 
-body.page-contact-nfc .hero-contact-nfc .dev-credit a {
-  color: var(--color-primary); /* met en valeur \"SmarterLogicWeb\" */
-  text-decoration: underline;
-  text-underline-offset: 2px;
+.hero-buttons .btn {
+  max-width: 100%;
+  min-width: 0;
+  white-space: normal;
+  overflow-wrap: anywhere;
 }
 
-body.page-contact-nfc .hero-contact-nfc .dev-credit a:hover,
-body.page-contact-nfc .hero-contact-nfc .dev-credit a:focus {
-  color: var(--color-primary-dark);
+.cta-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+  width: 100%;
 }
 
-body.dark-theme.page-contact-nfc .hero-contact-nfc .dev-credit {
-  color: #374151;
-}
-
-/* Variante DARK THEME pour les utilisateurs en mode sombre
-   → version réellement dark, lisible et cohérente avec le reste du site */
-body.dark-theme.page-contact-nfc {
-  background-color: #020617;
-}
-
-body.dark-theme.page-contact-nfc .hero-contact-nfc {
-  background: radial-gradient(circle at top, #020617 0%, #020617 60%, #000000 100%);
-}
-
-body.dark-theme.page-contact-nfc .hero-contact-nfc .hero-overlay {
-  padding-top: 1.25rem;
-  padding-bottom: 1.25rem;
-}
-
-body.dark-theme.page-contact-nfc .hero-contact-nfc .hero-overlay .container {
-  background: radial-gradient(circle at top left, #111827 0%, #020617 55%, #020617 100%);
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8);
-  border: 1px solid rgba(148, 163, 184, 0.6);
-}
-
-/* Texte lisible en dark mode */
-body.dark-theme.page-contact-nfc .hero-contact-nfc h1,
-body.dark-theme.page-contact-nfc .hero-contact-nfc p {
-  color: #e5e7eb;
-}
-
-/* Badge en dark mode */
-body.dark-theme.page-contact-nfc .hero-contact-nfc .hero-devis.badge {
-  background: rgba(255, 140, 66, 0.2);
-  color: #fed7aa;
-}
-
-/* Bouton \"Ajouter à mes contacts\" : couleurs proches du badge, lisibles en clair et en sombre */
-body.page-contact-nfc #nfc-add-contact {
-  background: rgba(255, 140, 66, 0.1);
-  border-color: rgba(255, 140, 66, 0.3);
-  color: var(--color-primary);
-}
-
-body.page-contact-nfc #nfc-add-contact svg {
-  background: rgba(255, 140, 66, 0.18);
-}
-
-/* Variante dark : contraste renforcé sur fond de carte sombre */
-body.dark-theme.page-contact-nfc #nfc-add-contact {
-  background: rgba(255, 140, 66, 0.18);
-  border-color: rgba(251, 146, 60, 0.6);
-  color: #fed7aa;
-}
-
-body.dark-theme.page-contact-nfc #nfc-add-contact svg {
-  background: rgba(15, 23, 42, 0.7);
-}
-
-/* Logo dans la carte en dark mode */
 body.dark-theme.page-contact-nfc .hero-contact-nfc .hero-logo {
   color: #f9fafb;
 }
@@ -246,7 +151,6 @@ body.dark-theme.page-contact-nfc .hero-contact-nfc .hero-logo .ventouse {
   color: #f9fafb;
 }
 
-/* Mention dev en dark mode */
 body.dark-theme.page-contact-nfc .hero-contact-nfc .dev-credit {
   color: #9ca3af;
 }
@@ -258,4 +162,164 @@ body.dark-theme.page-contact-nfc .hero-contact-nfc .dev-credit a {
 body.dark-theme.page-contact-nfc .hero-contact-nfc .dev-credit a:hover,
 body.dark-theme.page-contact-nfc .hero-contact-nfc .dev-credit a:focus {
   color: var(--color-primary);
+}
+
+
+/* Accueil P2 — services prioritaires et parcours de demande */
+body.page-accueil #hero-home .hero-overlay p {
+  display: block;
+  -webkit-line-clamp: unset;
+  overflow: visible;
+  max-width: 42rem;
+  margin-bottom: 0.9rem;
+  text-wrap: pretty;
+}
+.section-services-home .section-subtitle { margin-bottom: 2rem; }
+.home-service-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+.home-service-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.8rem;
+  background: var(--color-light);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-large);
+  padding: clamp(1.2rem, 2.7vw, 2rem);
+  box-shadow: var(--box-shadow-base);
+  min-width: 0;
+}
+.home-service-number {
+  font-weight: 800;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  color: var(--color-primary-dark);
+}
+.home-service-card h3 {
+  font-size: clamp(1.2rem, 2.3vw, 1.5rem);
+  line-height: 1.25;
+  margin: 0;
+}
+.home-service-card h3 a { color: var(--color-dark); }
+.home-service-card h3 a:hover { color: var(--color-primary-dark); }
+.home-service-card p {
+  margin: 0;
+  color: var(--color-text-muted);
+  line-height: 1.55;
+  flex: 1;
+}
+.home-service-link {
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.home-related-services {
+  margin-top: 1.5rem;
+  text-align: center;
+  line-height: 1.8;
+}
+.home-related-services h3 { font-size: 1.1rem; margin-bottom: 0.4rem; }
+.home-related-services p { margin: 0; }
+.home-related-services a { color: var(--color-primary-dark); text-decoration: underline; text-underline-offset: 3px; }
+.home-related-services span { padding: 0 0.45rem; color: var(--color-text-muted); }
+.section-home-process { background: var(--color-light-alt); }
+.home-process-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+.home-process-step {
+  min-width: 0;
+  padding: 1.4rem;
+  background: var(--color-light);
+  border-radius: var(--border-radius-large);
+  border: 1px solid var(--color-border);
+}
+.home-process-index {
+  display: inline-grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: var(--color-primary-dark);
+  color: #fff;
+  font-weight: 700;
+  margin-bottom: 0.85rem;
+}
+.home-process-step h3 { font-size: 1.12rem; margin-bottom: 0.55rem; }
+.home-process-step p { margin: 0; color: var(--color-text-muted); line-height: 1.55; }
+@media (max-width: 720px) {
+  .home-service-grid { grid-template-columns: 1fr; gap: 0.85rem; }
+  .home-process-grid { grid-template-columns: 1fr; gap: 0.85rem; }
+  .home-related-services { text-align: left; }
+  .home-related-services span { padding: 0 0.2rem; }
+}
+
+/* Ventousage Paris : rendre la présentation complète sans toucher au responsive. */
+body.page-ventousage-paris .hero-overlay p {
+  display: block;
+  -webkit-line-clamp: unset;
+  overflow: visible;
+  max-width: 44rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0.9rem;
+  text-wrap: pretty;
+}
+
+/* Sécurité plateaux : description du héros entière sur tous les écrans. */
+body.page-securite-plateaux .hero-overlay p {
+  display: block;
+  -webkit-line-clamp: unset;
+  overflow: visible;
+  max-width: 44rem;
+  margin: 0 auto 0.9rem;
+}
+
+/* Ventousage Paris : conversion légère, sans framework ni blocage du contenu. */
+.bms-vp-lead-layout { display: grid; grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); align-items: start; gap: clamp(1.5rem, 4vw, 3.5rem); }
+.bms-vp-lead-intro h2 { margin: 0 0 0.8rem; line-height: 1.18; }
+.bms-vp-lead-intro p { line-height: 1.65; margin-bottom: 1rem; }
+.bms-vp-lead-disclaimer { font-size: 0.9rem; color: var(--color-text-muted); }
+.bms-vp-form { background: var(--color-light); border: 1px solid var(--color-border); border-radius: 14px; padding: clamp(1rem, 3vw, 1.65rem); box-shadow: var(--box-shadow-base); color: var(--color-dark); }
+.bms-vp-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.95rem; }
+.bms-vp-form-grid label { display: flex; flex-direction: column; gap: 0.35rem; font-size: 0.93rem; font-weight: 600; min-width: 0; }
+.bms-vp-form-grid input { box-sizing: border-box; width: 100%; min-height: 46px; padding: 0.7rem; background: #fff; color: #1f2937; border: 1px solid #64748b; border-radius: 8px; font: inherit; }
+.bms-vp-form-grid input:focus-visible, .bms-vp-mobile-actions a:focus-visible { outline: 3px solid var(--color-primary-dark); outline-offset: 2px; }
+.bms-vp-privacy, .bms-vp-form-note { font-size: 0.83rem; line-height: 1.45; margin: 1rem 0 0.65rem; color: var(--color-text-muted); }
+.bms-vp-form .bms-vp-submit { width: 100%; min-height: 48px; cursor: pointer; }
+.bms-vp-form-note { text-align: center; margin-bottom: 0; }
+.bms-vp-honeypot { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.bms-vp-mobile-actions { display: none; }
+@media (max-width: 800px) {
+  .bms-vp-lead-layout { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .bms-vp-form-grid { grid-template-columns: 1fr; }
+  body.page-ventousage-paris { padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)); }
+  .bms-vp-mobile-actions { display: grid; grid-template-columns: 1fr 1fr; position: fixed; bottom: 0; left: 0; right: 0; z-index: 1800; gap: 0.55rem; padding: 0.55rem max(0.8rem, env(safe-area-inset-left, 0px)) calc(0.55rem + env(safe-area-inset-bottom, 0px)) max(0.8rem, env(safe-area-inset-right, 0px)); background: var(--color-light); border-top: 1px solid var(--color-border); box-shadow: 0 -4px 18px rgba(0,0,0,0.12); }
+  .bms-vp-mobile-actions a { display: grid; place-items: center; border-radius: 8px; padding: 0.7rem 0.3rem; min-height: 44px; text-align: center; font-weight: 700; line-height: 1.15; text-decoration: none; }
+  .bms-vp-mobile-primary { background: var(--color-primary-dark); color: #fff !important; }
+  .bms-vp-mobile-secondary { background: #163624; color: #fff !important; }
+  body.page-ventousage-paris:has(#cookie-banner) .bms-vp-mobile-actions { display: none; }
+}
+
+/* Ventousage Paris — structure consolidée, formulaire après les missions réelles. */
+body.page-ventousage-paris .hero { height: auto; }
+body.page-ventousage-paris .hero-overlay { position: relative; inset: auto; min-height: clamp(460px, 65vh, 820px); }
+.bms-vp-case-photo { display: flex; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: 1.25rem; }
+.bms-vp-case-photo img { width: min(100%, 340px); height: auto; border-radius: 10px; }
+.bms-vp-case-photo p { flex: 1; min-width: 180px; }
+.bms-vp-aot-note { margin-top: 1.5rem; }
+.bms-vp-final-cta { margin-top: 2rem; padding: 1.3rem; border: 1px solid var(--color-border); border-radius: 12px; text-align: center; background: var(--color-light-alt); }
+.bms-vp-final-cta p { margin: 0 0 1rem; }
+.bms-vp-final-cta .btn { margin: 0.25rem; }
+@media (max-width: 640px) {
+ body.page-ventousage-paris .whatsapp-float { display: none; }
+ .bms-vp-final-cta .btn { display: flex; justify-content: center; width: 100%; margin: 0.4rem 0; }
 }

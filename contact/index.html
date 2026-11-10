@@ -7,25 +7,11 @@
     <meta name="color-scheme" content="light dark">
     <!-- Google tag (gtag.js) -->
     <!-- Google Analytics 4 (Consent Mode v2) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V7QXQC5260"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('consent', 'default', {
-        'ad_storage': 'denied',
-        'ad_user_data': 'denied',
-        'ad_personalization': 'denied',
-        'analytics_storage': 'granted',
-        'functionality_storage': 'denied',
-        'security_storage': 'granted'
-      });
-      gtag('js', new Date());
-      gtag('config', 'G-V7QXQC5260', { anonymize_ip: true });
-    </script>
+    <script src="/js/consent.js?v=bms-20261026-1"></script>
 
     <!-- SEO & PARTAGE (OPEN GRAPH) - Optimisé pour la page Contact -->
-    <title>Contact BMS : Devis Tournage dans la Journée</title>
-    <meta name="description" content="Contactez BMS pour vos besoins de ventousage, sécurité, logistique ou AOT. Réponse rapide, équipe disponible et devis dans la journée.">
+    <title>Contact BMS : Tournage — Premier retour sous 24h</title>
+    <meta name="description" content="Contactez BMS pour vos besoins de ventousage, sécurité, logistique ou AOT. Réponse rapide, équipe disponible et Premier retour sous 24h.">
     
     <meta name="author" content="BMS Ventouse">
     <meta name="robots" content="index, follow, max-snippet:160">
@@ -46,15 +32,13 @@
     <meta name="twitter:image:alt" content="Personne utilisant un téléphone pour contacter un service (image héro)">
     
     <!-- PERFORMANCE & RESSOURCES -->
-    <link rel="preload" href="/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <!-- Fallback sûr pour Safari iOS -->
-    <link rel="stylesheet" href="/css/style.css">
-    <noscript><link rel="stylesheet" href="/css/style.css"></noscript>
+    <!-- Une seule feuille CSS : chargement stable, y compris sans JavaScript -->
+    <link rel="stylesheet" href="/css/style.css?v=bms-20261026-1">
     <link rel="prefetch" href="/" as="document">
     <link rel="prefetch" href="/services/" as="document">
     <link rel="dns-prefetch" href="//wa.me">
     <!-- Preload de l'image héros Contact pour optimiser le LCP -->
-    <link rel="preload" as="image" href="/images/hero-background-custom-1920.jpg">
+    <link rel="preload" as="image" href="/images/hero-background-custom-960.webp" imagesrcset="/images/hero-background-custom-640.webp 640w, /images/hero-background-custom-960.webp 960w, /images/hero-background-custom-1280.webp 1280w, /images/hero-background-custom-1920.webp 1920w" imagesizes="100vw">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- Chargement des polices Google (Anton + Poppins) aligné sur la home -->
@@ -71,7 +55,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
-    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="shortcut icon" href="/favicon-32x32.png">
 
     <!-- DONNÉES STRUCTURÉES (SCHEMA.ORG ) - Niveau Expert -->
     <script type="application/ld+json">
@@ -188,7 +172,11 @@
         <div class="hero-overlay">
             <div class="container animated-item">
                 <h1>Parlons de votre projet</h1>
-                <p class="hero-usp">Réponse rapide sous 24h • Ligne directe 7j/7 • Téléphone, WhatsApp ou email</p>
+                <p class="hero-usp">Premier retour sous 24h • Ligne directe 7j/7 • Téléphone, WhatsApp ou email</p>
+                <div class="hero-buttons">
+                    <a href="tel:+33646005642" class="btn btn-primary">Appeler BMS — urgence ou devis</a>
+                    <a href="https://wa.me/33646005642" class="btn btn-secondary" target="_blank" rel="noopener noreferrer">WhatsApp direct</a>
+                </div>
                 <p>Que ce soit pour une urgence plateau ou une préparation plusieurs semaines avant, choisissez le canal qui vous convient : on vous répond vite, sans formulaire interminable.</p>
             </div>
         </div>
@@ -297,7 +285,7 @@ Type de projet (tournage, shooting, événement…) :
 Besoins (ventousage, sécurité, convoyage, régie…) :
 Contraintes particulières :
                     </pre>
-                    <p class="contact-note">Envoyez-le à <a href="mailto:contact@bmsventouse.fr">contact@bmsventouse.fr</a>. Nous revenons vers vous sous 24–48 h ouvrées avec un retour détaillé.</p>
+                    <p class="contact-note">Envoyez-le à <a href="mailto:contact@bmsventouse.fr">contact@bmsventouse.fr</a>. Nous revenons vers vous sous 24h avec un premier retour.</p>
                   </div>
                 </div>
                 <p class="contact-note contact-credits">
@@ -352,7 +340,7 @@ Contraintes particulières :
     <section id="cta-contact" class="section cta-section">
         <div class="container animated-item">
             <h2 class="cta-title">Une Question ? Un Projet Urgent ?</h2>
-            <p class="cta-subtitle">Contactez‑nous pour une analyse gratuite de vos besoins et une proposition personnalisée sous&nbsp;24–48&nbsp;h.</p>
+            <p class="cta-subtitle">Contactez‑nous pour une analyse gratuite de vos besoins et un premier retour sous 24h, puis une proposition personnalisée selon votre projet.</p>
             <ul class="benefits-list">
               <li>Vous recevez une première réponse par téléphone, WhatsApp ou email selon le canal choisi.</li>
               <li>Le devis est clair, sans engagement ni frais cachés.</li>
@@ -507,7 +495,7 @@ Contraintes particulières :
 </footer>
 
 <!-- SCRIPTS (Identique au template) -->
-<script src="/js/script.js" defer></script>
+<script src="/js/script.js?v=bms-20261026-1" defer></script>
 
 </body>
 </html>

@@ -6,11 +6,6 @@
  * performante et accessible (Focus Trap, Escape Key, etc.).
  */
 
-/* Google Tag Manager : configuration globale (chargement différé via setupGTM) */
-if (typeof window !== 'undefined') {
-  window.GTM_ID = window.GTM_ID || 'GTM-KD4HDWX4';
-}
-/* Fin configuration Google Tag Manager */
 
 /* Production logging gate: silence console in production unless window.DEBUG=true */
 (function(){ try{ var DEBUG = !!(window.DEBUG); if(!DEBUG){ ['log','info','debug','warn'].forEach(function(k){ try{ console[k] = function(){}; }catch(e){} }); } window.__BMS_DEBUG__ = DEBUG; }catch(e){} })();
@@ -30,11 +25,12 @@ const BMS_TRUSTED_TYPES = (() => {
       return fallback;
     }
 
-    const policy = window.trustedTypes.createPolicy('default', {
+    const policy = window.BMSTrustedTypesPolicy || window.trustedTypes.createPolicy('default', {
       createHTML: (value) => value,
       createScriptURL: (value) => value
     });
 
+    window.BMSTrustedTypesPolicy = policy;
     return {
       html: (value) => policy.createHTML(value),
       scriptURL: (value) => policy.createScriptURL(value)
@@ -483,6 +479,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // Keep all content visible when JS animation support is unavailable or disabled.
+    if (prefersReducedMotion || typeof IntersectionObserver === 'undefined') return;
 
     const observer = new IntersectionObserver((entries, obs) => {
       entries.forEach(entry => {
@@ -501,6 +499,9 @@ document.addEventListener('DOMContentLoaded', () => {
       threshold: CONFIG.animations.threshold
     });
 
+    // Activate CSS transitions only after the observer has been created.
+    // Never gate essential content behind a JavaScript-only class by default.
+    document.documentElement.classList.add('js-animations');
     animatedItems.forEach(item => observer.observe(item));
   };
 
@@ -573,14 +574,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       };
 
-      // Événements
+      // Native buttons already trigger click with Enter and Space.
+      // Adding keydown here would toggle twice and close the answer again.
       question.addEventListener('click', toggleFAQ);
-      question.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          toggleFAQ();
-        }
-      });
     });
   };
 
@@ -667,155 +663,57 @@ document.addEventListener('DOMContentLoaded', () => {
   // --------------------------------------------------------------------------
   // MODULE: COOKIE BANNER (Consent Mode v2) - Analytics uniquement
   // --------------------------------------------------------------------------
-  const setupCookieBanner = () => {
-    try {
-      const KEY = 'bms_cookie_consent';
-
-      const applyConsent = (value) => {
-        const granted = value === 'accepted' || value === 'granted' || value === true;
-        if (typeof updateAnalyticsConsent === 'function') {
-          updateAnalyticsConsent(granted);
-        } else if (typeof gtag === 'function') {
-          // Fallback si updateAnalyticsConsent n'est pas disponible
-          gtag('consent', 'update', {
-            analytics_storage: granted ? 'granted' : 'denied'
-          });
-        }
-      };
-
-      const saved = localStorage.getItem(KEY);
-      if (saved) {
-        applyConsent(saved);
-        return;
-      }
-
-      // Création de la bannière (CSS via classes, pas de styles inline)
-      const banner = document.createElement('div');
+  const setupCookieBanner = (force = false) => {
+    if (!window.BMSAnalytics || (!force && window.BMSAnalytics.hasChoice())) return;
+    let banner = document.getElementById('cookie-banner');
+    if (!banner) {
+      const returnFocus = force ? document.activeElement : null;
+      banner = document.createElement('section');
       banner.id = 'cookie-banner';
       banner.className = 'cookie-banner';
       banner.setAttribute('role', 'dialog');
-      banner.setAttribute('aria-live', 'polite');
-      banner.setAttribute('aria-label', 'Bannière de consentement aux cookies');
-
+      banner.setAttribute('aria-labelledby', 'cookie-title');
+      banner.setAttribute('aria-describedby', 'cookie-description');
       banner.innerHTML = BMS_TRUSTED_TYPES.html(`
         <div class="cookie-banner__content">
-          <p class="cookie-banner__text">
-            Nous utilisons un cookie de mesure d’audience (Google Analytics) pour améliorer le site.
-            Aucune publicité, IP anonymisée. Vous pouvez refuser à tout moment.
-            <a class="cookie-banner__link" href="/politique-confidentialite/">En savoir plus</a>.
-          </p>
+          <div><h2 id="cookie-title">Votre choix de mesure d’audience</h2>
+          <p id="cookie-description">Avec votre accord, Google Analytics et Microsoft Clarity nous aident à améliorer le site.
+          Vous pouvez refuser ou retirer votre accord à tout moment. Le téléphone, l’e-mail et WhatsApp restent disponibles.
+          <a href="/politique-confidentialite/">En savoir plus</a>.</p></div>
           <div class="cookie-banner__actions">
-            <button id="cookie-decline" class="btn">Refuser</button>
-            <button id="cookie-accept" class="btn btn-primary">Accepter</button>
+            <button type="button" id="cookie-decline" class="btn btn-secondary">Refuser</button>
+            <button type="button" id="cookie-accept" class="btn btn-primary">Accepter</button>
           </div>
-        </div>
-      `);
-
+        </div>`);
       document.body.appendChild(banner);
-
-      const acceptBtn = banner.querySelector('#cookie-accept');
-      const declineBtn = banner.querySelector('#cookie-decline');
-
-      acceptBtn.addEventListener('click', () => {
-        localStorage.setItem(KEY, 'granted');
-        applyConsent('granted');
-
-        // Suivi du consentement (uniquement en cas d'acceptation)
-        try {
-          if (typeof gtag === 'function') {
-            gtag('event', 'cookie_consent', {
-              event_category: 'Consent',
-              consent_status: 'accepted',
-              consent_method: 'banner'
-            });
-          }
-        } catch (_) {
-          // non-bloquant
-        }
-
+      const close = granted => {
+        window.BMSAnalytics.setConsent(granted);
         banner.remove();
-      });
-
-      declineBtn.addEventListener('click', () => {
-        localStorage.setItem(KEY, 'denied');
-        applyConsent('denied');
-        banner.remove();
-      });
-    } catch (e) {
-      // non-bloquant
+        returnFocus?.focus({ preventScroll: true });
+      };
+      banner.querySelector('#cookie-accept').addEventListener('click', () => close(true));
+      banner.querySelector('#cookie-decline').addEventListener('click', () => close(false));
     }
+    if (force) banner.querySelector('#cookie-decline').focus();
   };
 
   // --------------------------------------------------------------------------
   // MODULE: ÉVÉNEMENTS ANALYTICS (GA4)
   // --------------------------------------------------------------------------
   const setupAnalyticsEvents = () => {
-    // Envoi GA4 direct + dataLayer pour GTM
-    const track = (eventName, params) => {
-      const p = params || {};
-      try {
-        if (typeof gtag === 'function') {
-          gtag('event', eventName, p);
-        }
-        if (Array.isArray(window.dataLayer)) {
-          window.dataLayer.push({ event: eventName, ...p });
-        }
-      } catch (e) {
-        // non-bloquant
+    // Delegation also covers CTA/header/footer elements inserted by other modules.
+    document.addEventListener('click', event => {
+      const anchor = event.target.closest && event.target.closest('a[href]');
+      if (!anchor || !window.BMSAnalytics) return;
+      const method = getBMSContactMethod(anchor.href);
+      const origin = location.pathname.startsWith('/contact-nfc') ? 'nfc' :
+        location.pathname.startsWith('/contact-direct') ? 'contact_direct' : 'site';
+      if (method) {
+        window.BMSAnalytics.track(method + '_click', { contact_method: method, lead_origin: origin });
+        trackLeadContact(method, origin);
+      } else if (anchor.pathname === '/contact/' && anchor.origin === location.origin && location.pathname !== '/contact/') {
+        window.BMSAnalytics.track('cta_contact_click');
       }
-    };
-
-    const getLeadOrigin = () => {
-      const path = window.location.pathname || '/';
-      if (path.startsWith('/contact-direct')) return 'contact_direct';
-      if (path.startsWith('/contact-nfc')) return 'nfc';
-      return 'site';
-    };
-
-    // Clics téléphone
-    document.querySelectorAll('a[href^="tel:"]').forEach(a => {
-      a.addEventListener('click', () => {
-        track('phone_click', {
-          event_category: 'Contact',
-          event_label: a.getAttribute('href')
-        });
-        // Lead unifié
-        trackLeadContact('phone', getLeadOrigin());
-      });
-    });
-
-    // Clics WhatsApp
-    document.querySelectorAll('a[href*="wa.me"]').forEach(a => {
-      a.addEventListener('click', () => {
-        track('whatsapp_click', {
-          event_category: 'Contact',
-          event_label: a.getAttribute('href')
-        });
-        // Lead unifié
-        trackLeadContact('whatsapp', getLeadOrigin());
-      });
-    });
-
-    // Clics vers la page Contact (micro-conversion, pas un lead direct)
-    document.querySelectorAll('a[href="/contact/"]').forEach(a => {
-      a.addEventListener('click', () => {
-        track('cta_contact_click', {
-          event_category: 'CTA',
-          event_label: a.textContent.trim() || 'Contact'
-        });
-      });
-    });
-
-    // Clics email
-    document.querySelectorAll('a[href^="mailto:"]').forEach(a => {
-      a.addEventListener('click', () => {
-        track('email_click', {
-          event_category: 'Contact',
-          event_label: a.getAttribute('href')
-        });
-        // Lead unifié
-        trackLeadContact('email', getLeadOrigin());
-      });
     });
   };
 
@@ -823,53 +721,11 @@ document.addEventListener('DOMContentLoaded', () => {
   // MODULE: TRACKING SPÉCIFIQUE PAGE NFC /contact-nfc/
   // --------------------------------------------------------------------------
   const setupNfcPageTracking = () => {
-    try {
-      const body = document.body;
-      if (!body || !body.classList.contains('page-contact-nfc')) return;
-
-      const track = (eventName, params) => {
-        const p = params || {};
-        try {
-          if (typeof gtag === 'function') {
-            gtag('event', eventName, p);
-          }
-          if (Array.isArray(window.dataLayer)) {
-            window.dataLayer.push({ event: eventName, ...p });
-          }
-        } catch (_) {
-          // non-bloquant
-        }
-      };
-
-      // Event dédié pour les visites provenant de la carte
-      track('nfc_page_view', {
-        page_location: window.location.href,
-        page_path: window.location.pathname,
-        nfc_source: 'business_card'
-      });
-
-      const bindClick = (id, type) => {
-        const el = document.getElementById(id);
-        if (!el) return;
-        el.addEventListener('click', () => {
-          track('nfc_contact_click', {
-            cta_type: type,
-            page_location: window.location.href,
-            page_path: window.location.pathname
-          });
-          // Lead unifié pour les contacts via la page NFC
-          trackLeadContact(type, 'nfc');
-        });
-      };
-
-      // CTA principaux du hero NFC
-      bindClick('nfc-phone', 'phone');
-      bindClick('nfc-whatsapp', 'whatsapp');
-      bindClick('nfc-email', 'email');
-      bindClick('nfc-add-contact', 'contact_card');
-    } catch (_) {
-      // non-bloquant
-    }
+    if (!document.body.classList.contains('page-contact-nfc')) return;
+    window.BMSAnalytics?.track('nfc_page_view');
+    document.getElementById('nfc-add-contact')?.addEventListener('click', () => {
+      window.BMSAnalytics?.track('contact_card_download', { contact_method: 'contact_card', lead_origin: 'nfc' });
+    });
   };
 
   // --------------------------------------------------------------------------
@@ -1005,29 +861,6 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // --------------------------------------------------------------------------
-  // MODULE: UNIFIER LE CHARGEMENT DU CSS (style.css)
-  // --------------------------------------------------------------------------
-  const unifyStylesheetLoading = () => {
-    try {
-      const head = document.head || document.getElementsByTagName('head')[0];
-      if (!head) return;
-      // Supprimer les preload redondants pour style.css
-      head.querySelectorAll('link[rel="preload"][as="style"][href$="/css/style.css"]').forEach(link => {
-        try { link.remove(); } catch (_) {}
-      });
-      // S'assurer qu'un seul link rel="stylesheet" vers style.css reste
-      const sheets = head.querySelectorAll('link[rel="stylesheet"][href$="/css/style.css"]');
-      if (sheets.length > 1) {
-        for (let i = 1; i < sheets.length; i++) {
-          try { sheets[i].remove(); } catch (_) {}
-        }
-      }
-    } catch (_) {
-      // non-bloquant
-    }
-  };
-
-  // --------------------------------------------------------------------------
   // MODULE: PRÉFÉRENCE GAUCHER / DROITIER (placement des actions à une main)
   // --------------------------------------------------------------------------
   const setupHandPreference = () => {
@@ -1088,51 +921,16 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', update);
   };
 
-  // --------------------------------------------------------------------------
-  // MODULE: Microsoft Clarity (chargé après consentement analytics)
-  // --------------------------------------------------------------------------
-  const setupClarity = () => {
-    try {
-      (function(c,l,a,r,i,t,y){
-        c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-        t=l.createElement(r);t.async=1;t.src=BMS_TRUSTED_TYPES.scriptURL("https://www.clarity.ms/tag/"+i);
-        y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-      })(window, document, "clarity", "script", "v0wk7109ix");
-      console.log('✅ Microsoft Clarity chargé (ID v0wk7109ix)');
-    } catch (e) {
-      // non-bloquant
-    }
-  };
-
-  const loadClarityIfConsented = () => {
-    try {
-      const KEY = 'bms_cookie_consent';
-      const saved = localStorage.getItem(KEY);
-      if (saved === 'accepted' || saved === 'granted') {
-        setupClarity();
-        return;
-      }
-      // Si l'utilisateur accepte via la bannière, on charge Clarity
-      document.addEventListener('click', (e) => {
-        const el = e.target;
-        if (el && el.id === 'cookie-accept') {
-          setTimeout(setupClarity, 0);
-        }
-      });
-    } catch (_) {
-      // non-bloquant
-    }
-  };
-
   // ==========================================================================
   // INITIALISATION DE TOUS LES MODULES
   // ==========================================================================
   try {
-    // Construire d'abord le header/nav unifiés, puis activer le mode sombre
+    // Afficher le choix de consentement avant les traitements secondaires.
+    // Il doit rester accessible même si un module de navigation échoue.
+    setupCookieBanner();
     setupUnifiedHeader();
     setupHamburgerMenu();
     setupThemeMode();
-    setupCookieBanner();
     setupSkipLink();
     setupUnifiedFooter();
     setupHeroLayout();
@@ -1153,7 +951,6 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (_) {
       // non-bloquant
     }
-    loadClarityIfConsented();
     // Global canonical (fallback si manquante)
     setupCanonicalFallback();
     // Passe orthographique typographique FR reportée après le chargement initial
@@ -1166,23 +963,6 @@ document.addEventListener('DOMContentLoaded', () => {
     } catch (_) {
       // non-bloquant
     }
-    // Google Tag Manager (GTM) - chargement dynamique différé pour limiter l'impact sur le thread principal
-    try {
-      const startGTM = () => { setupGTM(); };
-      if ('requestIdleCallback' in window) {
-        requestIdleCallback(startGTM, { timeout: 2000 });
-      } else {
-        setTimeout(startGTM, 1000);
-      }
-    } catch (_) {
-      // non-bloquant
-    }
-    // Message de succès pour le formulaire Contact (?success=1)
-    setupContactSuccessNotice();
-    // Détails dynamiques selon service sur le formulaire Contact
-    setupContactServiceDetails();
-    // Capture des leads du formulaire Contact vers HubSpot (non bloquant)
-    setupContactLeadCapture();
     // Harmonisation des emails: mécanisme legacy désormais désactivé (migration terminée)
 
     // PWA: enregistrement du Service Worker (pour PWA=100)
@@ -1196,110 +976,34 @@ document.addEventListener('DOMContentLoaded', () => {
     // Protéger les termes métier (ventousage...) des traductions automatiques approximatives
     protectVentousageTerms();
 
-    // Debug/override consent via query string: ?consent=granted|denied
-    try {
-      const qs = new URLSearchParams(window.location.search);
-      const consentParam = qs.get('consent');
-      if (consentParam && typeof gtag === 'function') {
-        gtag('consent', 'update', {
-          analytics_storage: consentParam === 'granted' ? 'granted' : 'denied'
-        });
-        console.log('Consent override via query param:', consentParam);
-      }
-    } catch (e) {
-      // non-bloquant
-    }
-
-    // Lien "Gérer les cookies" : gestion du consentement via une boîte de dialogue minimale
-    try {
-      document.querySelectorAll('.manage-cookies,[data-cookie="manage"]').forEach(link => {
-        link.addEventListener('click', (e) => {
-          e.preventDefault();
-          const granted = window.confirm("Autoriser les cookies de mesure d'audience (Google Analytics) ?");
-          try {
-            if (typeof updateAnalyticsConsent === 'function') {
-              updateAnalyticsConsent(granted === true);
-            }
-          } catch (_) {
-            // non-bloquant
-          }
-          if (granted === true) {
-            try {
-              setupClarity();
-            } catch (_) {
-              // non-bloquant
-            }
-          }
-        });
+    document.querySelectorAll('.manage-cookies,[data-cookie="manage"]').forEach(link => {
+      link.addEventListener('click', event => {
+        event.preventDefault();
+        setupCookieBanner(true);
       });
-    } catch (_) {
-      // non-bloquant
-    }
+    });
 
     console.log('🚀 BMS Ventouse - Tous les modules initialisés avec succès');
   } catch (error) {
     console.error("Erreur lors de l'initialisation des scripts du site :", error);
-  } finally {
-    try {
-      if ('requestIdleCallback' in window) {
-        requestIdleCallback(unifyStylesheetLoading);
-      } else {
-        setTimeout(unifyStylesheetLoading, 1500);
-      }
-    } catch (_) {
-      // non-bloquant
-    }
   }
 });
 
-function updateAnalyticsConsent(granted) {
+// Exact BMS destinations only; no URL/subject/body or third-party coordinates are measured.
+function getBMSContactMethod(href) {
   try {
-    var status = granted === true ? 'granted' : 'denied';
-
-    if (typeof gtag === 'function') {
-      gtag('consent', 'update', {
-        analytics_storage: status,
-        ad_storage: 'denied',
-        ad_user_data: 'denied',
-        ad_personalization: 'denied'
-      });
-    }
-
-    try {
-      localStorage.setItem('bms_cookie_consent', status);
-    } catch (_) {
-      // non-bloquant
-    }
-  } catch (_) {
-    // non-bloquant
-  }
+    const url = new URL(href, location.origin);
+    if (url.protocol === 'tel:' && url.pathname.replace(/[^+0-9]/g, '') === '+33646005642') return 'phone';
+    if (url.protocol === 'mailto:' && decodeURIComponent(url.pathname).toLowerCase() === 'contact@bmsventouse.fr') return 'email';
+    if (url.protocol === 'https:' && url.hostname === 'wa.me' && /^\/33646005642\/?$/.test(url.pathname)) return 'whatsapp';
+  } catch (_) { /* Unsupported or malformed links are not commercial events. */ }
+  return null;
 }
 
-// --------------------------------------------------------------------------
-// UTIL: Événement unifié de lead (lead_contact)
-// --------------------------------------------------------------------------
-function trackLeadContact(contactMethod, leadOrigin, extraParams) {
-  try {
-    const base = {
-      contact_method: contactMethod || 'unknown',
-      lead_origin: leadOrigin || 'site',
-      page_path: window.location.pathname,
-      page_location: window.location.href
-    };
-    const params = Object.assign(base, extraParams || {});
-
-    if (typeof gtag === 'function') {
-      gtag('event', 'lead_contact', params);
-    }
-    try {
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({ event: 'lead_contact', ...params });
-    } catch (_) {
-      // non-bloquant
-    }
-  } catch (_) {
-    // non-bloquant
-  }
+function trackLeadContact(contactMethod, leadOrigin) {
+  // This is a contact intention, never proof of a received or qualified request.
+  if (!['phone', 'email', 'whatsapp'].includes(contactMethod)) return;
+  window.BMSAnalytics?.track('lead_contact', { contact_method: contactMethod, lead_origin: leadOrigin });
 }
 
 // --------------------------------------------------------------------------
@@ -1419,7 +1123,7 @@ function setupUnifiedFooter() {
     footerContent.innerHTML = BMS_TRUSTED_TYPES.html(html);
 
     if (footerBottom) {
-      footerBottom.innerHTML = BMS_TRUSTED_TYPES.html('&copy; 2025 BMS Ventouse. Tous droits réservés. Site réalisé par <a href="https://smarterlogicweb.com" target="_blank" rel="noopener noreferrer">SmarterLogicWeb</a>.');
+      footerBottom.innerHTML = BMS_TRUSTED_TYPES.html('&copy; 2026 BMS Ventouse. Tous droits réservés. Site réalisé par <a href="https://smarterlogicweb.com" target="_blank" rel="noopener noreferrer">SmarterLogicWeb</a>.');
     }
   } catch (_) {
     // non-bloquant
@@ -1532,7 +1236,7 @@ function setupHeroLayout() {
 
         if (isEnglish) {
           const primary = document.createElement('a');
-          primary.href = '/contact/';
+          primary.href = 'tel:+33646005642';
           primary.className = 'btn btn-primary';
           primary.textContent = 'Contact us';
           heroButtons.appendChild(primary);
@@ -1546,9 +1250,9 @@ function setupHeroLayout() {
           heroButtons.appendChild(secondary);
         } else {
           const primary = document.createElement('a');
-          primary.href = '/contact/';
+          primary.href = 'tel:+33646005642';
           primary.className = 'btn btn-primary';
-          primary.textContent = 'Nous contacter';
+          primary.textContent = 'Appeler BMS';
           heroButtons.appendChild(primary);
 
           const secondary = document.createElement('a');
@@ -1613,198 +1317,6 @@ function setupHeroParallax() {
 
   window.addEventListener('scroll', onScroll, { passive: true });
 }
-
-// --------------------------------------------------------------------------
-// MODULE: Google Tag Manager (GTM) — chargement dynamique
-// --------------------------------------------------------------------------
-function setupGTM() {
-  try {
-    // Récupère l'ID GTM depuis une meta tag ou variable globale (window.GTM_ID)
-    const meta = document.querySelector('meta[name="gtm-id"]');
-    const id = (meta && meta.content || (window.GTM_ID || '')).trim();
-    if (!id) {
-      // Ne pas loguer en production
-      return;
-    }
-    window.dataLayer = window.dataLayer || [];
-    window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-    const s = document.createElement('script');
-    s.async = true;
-    s.src = BMS_TRUSTED_TYPES.scriptURL('https://www.googletagmanager.com/gtm.js?id=' + encodeURIComponent(id));
-    document.head.appendChild(s);
-  } catch (e) {
-    // non-bloquant
-  }
-}
-
-// --------------------------------------------------------------------------
-// MODULE: Message de succès sur /contact/ après soumission du formulaire (?success=1)
-// --------------------------------------------------------------------------
-function setupContactSuccessNotice() {
-  try {
-    const qs = new URLSearchParams(window.location.search);
-    const isSuccess = qs.get('success') === '1';
-    if (!isSuccess) return;
-
-    // Trouve le formulaire contact OU devis et son conteneur
-    const form = document.querySelector('form[name="contact"], form[name="quote"]');
-    const container = form ? form.closest('.container') : document.querySelector('main .container');
-    if (!container) return;
-
-    const note = document.createElement('div');
-    note.className = 'coverage-note-card';
-    note.setAttribute('role', 'status');
-    note.setAttribute('aria-live', 'polite');
-    note.style.marginBottom = '1rem';
-    note.innerHTML = BMS_TRUSTED_TYPES.html('<strong>Merci !</strong> Votre demande a été envoyée. Nous revenons vers vous sous 24–48&nbsp;h ouvrées. Vous pouvez aussi nous joindre directement au <a href="tel:+33646005642">+33&nbsp;6&nbsp;46&nbsp;00&nbsp;56&nbsp;42</a>.');
-
-    container.insertBefore(note, container.firstChild);
-  } catch (e) {
-    // non-bloquant
-  }
-}
-
-// --------------------------------------------------------------------------
-// MODULE: Affichage conditionnel des blocs de détails du formulaire Contact
-// --------------------------------------------------------------------------
-function setupContactServiceDetails() {
-  try {
-    const form = document.querySelector('form[name="contact"]');
-    const serviceSel = document.getElementById('service');
-    if (!form || !serviceSel) return;
-    const groups = Array.from(form.querySelectorAll('.service-details'));
-    const map = (val) => {
-      const v = String(val || '').toLowerCase();
-      if (v.includes('ventousage')) return 'ventousage';
-      if (v.includes('sécurité') || v.includes('gardiennage')) return 'securite';
-      if (v.includes('convoyage')) return 'convoyage';
-      if (v.includes('régie')) return 'regie';
-      if (v.includes('affichage')) return 'affichage';
-      if (v.includes('signalisation')) return 'signalisation';
-      if (v.includes('loges') || v.includes('confort')) return 'loges';
-      if (v.includes('cantine') || v.includes('catering')) return 'cantine';
-      return '';
-    };
-    const showRelevant = () => {
-      const code = map(serviceSel.value);
-      groups.forEach(g => {
-        const s = g.getAttribute('data-service') || '';
-        g.style.display = s === code ? '' : 'none';
-      });
-    };
-    serviceSel.addEventListener('change', showRelevant);
-    showRelevant();
-  } catch (_) {}
-}
-
-function setupContactLeadCapture() {
-  try {
-    const form = document.querySelector('form[name="contact"]');
-    if (!form) return;
-
-    const getValue = (id) => {
-      const el = document.getElementById(id);
-      return el && typeof el.value === 'string' ? el.value : '';
-    };
-
-    const getChecked = (id) => {
-      const el = document.getElementById(id);
-      return !!(el && el.checked);
-    };
-
-    form.addEventListener('submit', () => {
-      try {
-        const urgency = getValue('urgency');
-
-        const payload = {
-          fullname: getValue('name'),
-          role: getValue('role'),
-          company: getValue('company'),
-          email: getValue('email'),
-          phone: getValue('phone'),
-          service: getValue('service'),
-          package: getValue('package'),
-          location: getValue('location'),
-          address: getValue('address'),
-          schedule: getValue('schedule'),
-          urgent: urgency === 'urgent_24h' || urgency === 'urgent_72h',
-          urgency,
-          date_start: getValue('date_start'),
-          date_end: getValue('date_end'),
-          payment_preference: getValue('payment'),
-          budget: getValue('budget'),
-          details: getValue('details'),
-          consent: getChecked('consent'),
-          source: 'contact_form',
-          // Champs spécifiques selon service
-          svc_cantine_people: getValue('svc_cantine_people'),
-          svc_cantine_meals: getValue('svc_cantine_meals'),
-          svc_cantine_dietary: getValue('svc_cantine_dietary'),
-          svc_cantine_hours: getValue('svc_cantine_hours'),
-          svc_ventousage_streets: getValue('svc_ventousage_streets'),
-          svc_ventousage_zones: getValue('svc_ventousage_zones'),
-          svc_ventousage_hours: getValue('svc_ventousage_hours'),
-          svc_securite_agents: getValue('svc_securite_agents'),
-          svc_securite_hours: getValue('svc_securite_hours'),
-          svc_securite_ssiap: getChecked('svc_securite_ssiap'),
-          svc_convoyage_pickup: getValue('svc_convoyage_pickup'),
-          svc_convoyage_drop: getValue('svc_convoyage_drop'),
-          svc_convoyage_schedule: getValue('svc_convoyage_schedule'),
-          svc_convoyage_stops: getValue('svc_convoyage_stops'),
-          svc_convoyage_volume: getValue('svc_convoyage_volume'),
-          svc_regie_equipment: getValue('svc_regie_equipment'),
-          svc_regie_agents: getValue('svc_regie_agents'),
-          svc_regie_hours: getValue('svc_regie_hours'),
-          svc_signalisation_perimeter: getValue('svc_signalisation_perimeter'),
-          svc_signalisation_barriers: getValue('svc_signalisation_barriers'),
-          svc_signalisation_hours: getValue('svc_signalisation_hours'),
-          svc_affichage_streets: getValue('svc_affichage_streets'),
-          svc_affichage_posters: getValue('svc_affichage_posters'),
-          svc_loges_number: getValue('svc_loges_number'),
-          svc_loges_types: getValue('svc_loges_types'),
-          svc_loges_location: getValue('svc_loges_location')
-        };
-
-        // On stocke email/phone pour le suivi du lead si l’utilisateur revient plus tard
-        try {
-          localStorage.setItem('bms_lead_email', payload.email || '');
-          localStorage.setItem('bms_lead_phone', payload.phone || '');
-          localStorage.setItem('bms_lead_fullname', payload.fullname || '');
-          localStorage.setItem('bms_lead_company', payload.company || '');
-        } catch (_) {}
-
-        // Envoi email géré par Netlify Forms côté serveur (notifications configurées dans Netlify)
-        // Aucun appel API nécessaire côté front pour rester gratuit et sans maintenance.
-
-        // Événement de lead : envoi direct vers GA4 (gtag) + dataLayer pour GTM
-        try {
-          if (typeof gtag === 'function') {
-            gtag('event', 'contact_submitted', payload);
-          }
-        } catch (_) {}
-        try {
-          window.dataLayer = window.dataLayer || [];
-          window.dataLayer.push({ event: 'contact_submitted', ...payload });
-        } catch (_) {}
-
-        // Lead unifié pour le formulaire contact (demande structurée)
-        trackLeadContact('form', 'contact_form', {
-          lead_service: payload.service || '',
-          lead_urgency: payload.urgency || ''
-        });
-      } catch (_) {}
-    });
-  } catch (_) {
-    // non-bloquant
-  }
-}
-
-// --------------------------------------------------------------------------
-// UTIL LEGACY (remplacement d'anciens emails) — supprimé car migration terminée
-// --------------------------------------------------------------------------
-// La logique de migration d'anciens emails vers contact@bmsventouse.fr
-// a été appliquée en dur dans le code HTML. Ce bloc est laissé vide
-// pour éviter tout traitement inattendu côté front.
 
 // --------------------------------------------------------------------------
 // PWA: Service Worker registration

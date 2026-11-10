@@ -43,8 +43,10 @@ async function generateVariants(inputPath, baseOutName, widths, formats = ['webp
 
   // Also create a moderately compressed original format copy if needed
   const originalWebp = path.join(outDir, `${extless}.webp`);
-  await sharp(inputPath).webp({ quality: 82 }).toFile(originalWebp);
-  console.log(`Generated ${originalWebp}`);
+  if (path.resolve(inputPath) !== path.resolve(originalWebp)) {
+    await sharp(inputPath).webp({ quality: 82 }).toFile(originalWebp);
+    console.log(`Generated ${originalWebp}`);
+  }
 }
 
 async function generateIcons() {
@@ -94,7 +96,11 @@ async function generateIcons() {
 
 async function main() {
   const imagesDir = path.join(__dirname, '..', 'images');
-  const heroJpg = path.join(imagesDir, 'hero-background-custom.jpg');
+  // The repository retains the original WebP; support a future JPG without requiring it.
+  let heroJpg = path.join(imagesDir, 'hero-background-custom.jpg');
+  try { await fs.access(heroJpg); } catch (_) {
+    heroJpg = path.join(imagesDir, 'hero-background-custom.webp');
+  }
 
   // Variants widths tuned for mobile-first LCP improvements
   const widths = [640, 960, 1280, 1920];
