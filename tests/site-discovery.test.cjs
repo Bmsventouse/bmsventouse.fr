@@ -69,3 +69,42 @@ test('homepage copy does not contain contradictory office locations or legacy ye
   assert.doesNotMatch(html, /&copy; 2025 BMS Ventouse/);
   assert.doesNotMatch(script, /&copy; 2025 BMS Ventouse/);
 });
+
+test('sitemap contains precisely the indexable HTML pages with matching canonicals', () => {
+  const siteOrigin = 'https://bmsventouse.fr';
+  const sitemap = fs.readFileSync('sitemap.xml', 'utf8');
+  const urls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map(match => match[1]);
+  assert.equal(new Set(urls).size, urls.length, 'Duplicate sitemap URLs');
+
+  const htmlFiles = [];
+  function walk(dir) {
+    for (const item of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (item.name.startsWith('.') || item.name === 'node_modules') continue;
+      const file = path.join(dir, item.name);
+      if (item.isDirectory()) walk(file);
+      else if (item.name.endsWith('.html')) htmlFiles.push(file);
+    }
+  }
+  walk('.');
+  const indexable = new Set();
+  for (const file of htmlFiles) {
+    const html = fs.readFileSync(file, 'utf8');
+    const head = html.split('</head>')[0];
+    const robots = head.match(/<meta[^>]*name="robots"[^>]*>/i)?.[0] || '';
+    const isNoindex = /noindex/i.test(robots);
+    const normalized = file.split(path.sep).join('/').replace(/^\.\//, '');
+    const pathname = normalized === 'index.html' ? '/' :
+      normalized.endsWith('/index.html') ? '/' + normalized.slice(0, -'index.html'.length) :
+        '/' + normalized;
+    const url = siteOrigin + pathname;
+    if (isNoindex) {
+      assert.ok(!urls.includes(url), file + ' is noindex but listed in sitemap');
+      continue;
+    }
+    const canonical = head.match(/<link[^>]*rel="canonical"[^>]*>/i)?.[0] || '';
+    assert.ok(canonical.includes('href="' + url + '"'), file + ': canonical mismatch');
+    assert.ok(urls.includes(url), file + ': missing indexable page in sitemap');
+    indexable.add(url);
+  }
+  assert.deepEqual(new Set(urls), indexable, 'Sitemap has extra or missing indexable URLs');
+});
