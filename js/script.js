@@ -569,14 +569,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
       };
 
-      // Événements
+      // Native buttons already trigger click with Enter and Space.
+      // Adding keydown here would toggle twice and close the answer again.
       question.addEventListener('click', toggleFAQ);
-      question.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          toggleFAQ();
-        }
-      });
     });
   };
 

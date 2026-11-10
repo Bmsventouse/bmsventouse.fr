@@ -1110,12 +1110,17 @@ body.dark-theme .header {
 }
 
 .faq-answer {
-  max-height: 0;
-  overflow: hidden;
+  /* Let every expanded answer grow naturally, regardless of its length. */
+  max-height: none;
+  overflow: visible;
   background-color: var(--color-light-alt);
-  padding: 0 1.5rem;
-  transition: max-height 0.3s cubic-bezier(.4,0,.2,1), padding 0.3s;
+  padding: 1rem 1.5rem;
   color: #374151;
+}
+
+/* Explicit hiding also works if other CSS rules override [hidden]. */
+.faq-answer[hidden] {
+  display: none;
 }
 
 .faq-answer p {
