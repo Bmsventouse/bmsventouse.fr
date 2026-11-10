@@ -80,8 +80,9 @@ body.page-contact-nfc .hero h1 {
    préserver le rendu “grand format” sur tablette/desktop */
 @media (max-width: 600px) {
   .hero h1 {
-    font-size: clamp(1.6rem, 5.2vw, 2.3rem);
-    line-height: 1.18;
+    font-size: clamp(1.55rem, 5vw, 1.9rem);
+    line-height: 1.16;
+    text-wrap: balance;
   }
 }
 
