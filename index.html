@@ -30,13 +30,16 @@
     <meta property="og:title" content="BMS Ventouse – Ventousage, gardiennage et logistique de tournage à Paris et en France">
     <meta property="og:description" content="Ventousage, gardiennage de plateaux et logistique pour tournages, shootings et événements à Paris et en France. Interventions 24/7, Premier retour sous 24h.">
     <meta property="og:url" content="https://bmsventouse.fr/">
-    <meta property="og:image" content="https://bmsventouse.fr/android-chrome-512x512.png">
+    <meta property="og:image" content="https://bmsventouse.fr/images/hero-background-custom-1920.jpg">
+    <meta property="og:image:width" content="1920">
+    <meta property="og:image:height" content="1080">
+    <meta property="og:image:alt" content="Logistique de tournage et stationnement réservé par BMS Ventouse">
     
     <!-- Twitter Cards -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="BMS Ventouse – Ventousage, gardiennage et logistique de tournage à Paris et en France">
     <meta name="twitter:description" content="Ventousage, gardiennage de plateaux et logistique pour tournages, shootings et événements à Paris et en France. Interventions 24/7, Premier retour sous 24h.">
-    <meta name="twitter:image" content="https://bmsventouse.fr/android-chrome-512x512.png">
+    <meta name="twitter:image" content="https://bmsventouse.fr/images/hero-background-custom-1920.jpg">
     <meta name="twitter:image:alt" content="Ventousage, gardiennage et logistique de tournage par BMS Ventouse">
     
     <!-- Géolocalisation pour SEO local -->
@@ -56,8 +59,7 @@
     <!-- Préconnexion aux domaines tiers utilisés (polices, analytics) -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="preconnect" href="https://www.googletagmanager.com">
-    <link rel="preconnect" href="https://www.google-analytics.com">
+    <!-- Analytics services load only after consent; do not preconnect beforehand. -->
 
     <!-- Préchargement des polices Google (Anton + Poppins) sans bloquer le rendu -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Anton&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'">
@@ -72,7 +74,8 @@
           as="image"
           href="/images/hero-background-custom-960.webp"
           imagesrcset="/images/hero-background-custom-640.webp 640w, /images/hero-background-custom-960.webp 960w, /images/hero-background-custom-1280.webp 1280w, /images/hero-background-custom-1920.webp 1920w"
-          imagesizes="100vw">
+          imagesizes="100vw"
+          fetchpriority="high">
     <!-- Font Awesome pour les icônes -->
     <!-- Supprimé Font Awesome CSS sur la page d'accueil pour améliorer FCP/TBT et éviter le chargement de polices -->
 

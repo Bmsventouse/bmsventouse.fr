@@ -1,14 +1,28 @@
 /* Animations globales */
+/* Progressive enhancement: content is readable without JavaScript. */
 .animated-item {
-  opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
-  will-change: opacity, transform;
+  opacity: 1;
+  transform: none;
 }
 
-.animated-item.is-visible {
+/* Only hide elements when an observer is active and motion is allowed. */
+.js-animations .animated-item:not(.is-visible) {
+  opacity: 0;
+  transform: translateY(20px);
+}
+.js-animations .animated-item {
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.js-animations .animated-item.is-visible {
   opacity: 1;
   transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .js-animations .animated-item {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }
 
 /* Soulignement animé des nav-link */

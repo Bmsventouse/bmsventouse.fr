@@ -479,6 +479,8 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    // Keep all content visible when JS animation support is unavailable or disabled.
+    if (prefersReducedMotion || typeof IntersectionObserver === 'undefined') return;
 
     const observer = new IntersectionObserver((entries, obs) => {
       entries.forEach(entry => {
@@ -497,6 +499,9 @@ document.addEventListener('DOMContentLoaded', () => {
       threshold: CONFIG.animations.threshold
     });
 
+    // Activate CSS transitions only after the observer has been created.
+    // Never gate essential content behind a JavaScript-only class by default.
+    document.documentElement.classList.add('js-animations');
     animatedItems.forEach(item => observer.observe(item));
   };
 
