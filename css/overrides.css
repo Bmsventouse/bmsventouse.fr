@@ -1,0 +1,109 @@
+/* === Overrides & utilitaires de style.css === */
+
+/* Ajustements spécifiques NFC, WhatsApp mobile et menu mobile
+   (déjà en grande partie redéfinis plus haut, conservés pour compatibilité) */
+
+/* Menu mobile : overlay semi-transparent plein écran */
+.nav-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  z-index: var(--z-overlay);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.nav-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Conteneur du menu mobile lorsqu'il est ouvert */
+.nav-links.active {
+  display: flex !important;
+  flex-direction: column;
+  position: fixed;
+  /* Commence sous le header (et la bannière promo si elle est réactivée) */
+  top: calc(var(--promo-banner-height) + var(--header-height));
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: var(--color-light);
+  z-index: 1501;
+  padding: 1.5rem 0;
+  box-shadow: var(--box-shadow-base);
+  animation: slideInDown 0.3s forwards;
+  /* Hauteur restante de l'écran (iOS + fallback) */
+  height: calc(100vh - var(--promo-banner-height) - var(--header-height));
+  height: calc(100dvh - var(--promo-banner-height) - var(--header-height));
+  overflow-y: auto;
+}
+
+/* Animation d'apparition du menu mobile */
+@keyframes slideInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Liens à l'intérieur du menu mobile ouvert */
+.nav-links.active .nav-link {
+  margin: 0.5rem 1rem;
+  padding: 0.8rem 1rem;
+  text-align: center;
+  width: calc(100% - 2rem);
+  border-radius: var(--border-radius-pill);
+}
+
+/* Bloquer le scroll de fond quand le menu mobile est ouvert */
+body:has(.nav-links.active) {
+  overflow: hidden;
+}
+
+/* Consent remains visible without changing BMS contact availability. */
+.cookie-banner {
+  position: fixed;
+  bottom: 1rem;
+  left: 1rem;
+  right: 1rem;
+  z-index: 3000;
+  max-width: 900px;
+  max-height: calc(100dvh - 2rem);
+  overflow-y: auto;
+  margin: 0 auto;
+  padding: 1rem;
+  background: var(--color-light, #fff);
+  color: var(--color-dark, #101820);
+  border: 2px solid var(--color-primary, #ff8c42);
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+.cookie-banner h2 { margin: 0 0 0.5rem; font-size: 1.1rem; }
+.cookie-banner p { margin: 0; font-size: 0.9rem; line-height: 1.5; }
+.cookie-banner__content { display: flex; align-items: center; gap: 1rem; }
+.cookie-banner__actions { display: flex; flex-shrink: 0; gap: 0.75rem; }
+.cookie-banner__actions .btn { min-height: 44px; padding: 0.65rem 1rem; }
+.cookie-banner a { color: inherit; text-decoration: underline; }
+.cookie-banner :focus-visible { outline: 3px solid currentcolor; outline-offset: 3px; }
+@media (max-width: 640px) {
+  .cookie-banner__content { flex-direction: column; align-items: stretch; }
+  .cookie-banner__actions .btn { flex: 1; }
+}
+
+/* Keep secondary contact actions legible over photographic hero backgrounds. */
+.hero .btn-secondary {
+  background-color: rgba(16, 24, 32, 0.9);
+  color: #fff;
+  border-color: var(--color-primary);
+}

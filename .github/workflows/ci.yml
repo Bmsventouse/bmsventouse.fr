@@ -42,6 +42,9 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Contact, consent and cache regression tests
+        run: npm test
+
       - name: Install stylelint shared config
         run: npm i --no-save stylelint-config-standard@latest
 

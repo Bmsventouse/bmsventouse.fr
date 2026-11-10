@@ -7,21 +7,7 @@
     <meta name="color-scheme" content="light dark">
     <!-- Google tag (gtag.js) -->
     <!-- Google Analytics 4 (Consent Mode v2) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V7QXQC5260"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('consent', 'default', {
-        'ad_storage': 'denied',
-        'ad_user_data': 'denied',
-        'ad_personalization': 'denied',
-        'analytics_storage': 'granted',
-        'functionality_storage': 'denied',
-        'security_storage': 'granted'
-      });
-      gtag('js', new Date());
-      gtag('config', 'G-V7QXQC5260', { anonymize_ip: true });
-    </script>
+    <script src="/js/consent.js?v=bms-20261026-1"></script>
 
     <!-- SEO & PARTAGE (OPEN GRAPH) - Optimisé pour la page Services -->
     <title>Services Tournage Paris : Ventousage, Sécurité &amp; Logistique | BMS</title>
@@ -44,12 +30,10 @@
     <meta name="twitter:image:alt" content="Illustration des services BMS Ventouse (image de présentation)">
     
     <!-- PERFORMANCE & RESSOURCES -->
-    <link rel="preload" href="/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <!-- Fallback sûr pour Safari iOS -->
-    <link rel="stylesheet" href="/css/style.css">
-    <noscript><link rel="stylesheet" href="/css/style.css"></noscript>
-    <link rel="preload" href="/js/script.js" as="script">
-    <link rel="preload" as="image" href="/images/hero-background-custom-1920.jpg">
+    <!-- Une seule feuille CSS : chargement stable, y compris sans JavaScript -->
+    <link rel="stylesheet" href="/css/style.css?v=bms-20261026-1">
+    <link rel="preload" href="/js/script.js?v=bms-20261026-1" as="script">
+    <link rel="preload" as="image" href="/images/hero-background-custom-960.webp" imagesrcset="/images/hero-background-custom-640.webp 640w, /images/hero-background-custom-960.webp 960w, /images/hero-background-custom-1280.webp 1280w, /images/hero-background-custom-1920.webp 1920w" imagesizes="100vw">
     <link rel="preload" href="/android-chrome-192x192.webp" as="image">
     <!-- Preload d'images de service (JPEG uniquement pour l'instant) -->
     <link rel="preload" href="/images/service-securite-custom.jpg" as="image">
@@ -72,7 +56,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
-    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="shortcut icon" href="/favicon-32x32.png">
 
     <!-- DONNÉES STRUCTURÉES (SCHEMA.ORG ) -->
     <script type="application/ld+json">
@@ -229,7 +213,7 @@
         <div class="container">
             <h2 id="catalog-title" class="section-title animated-item">Notre Catalogue de Prestations</h2>
             <p class="section-subtitle animated-item">Des services experts, à la carte ou en package, pour répondre précisément à chaque étape de votre projet.</p>
-            <p class="section-subtitle approach-note animated-item">Notre approche&nbsp;: <strong>conditions directes, sans surcoût d'agence</strong>, <strong>devis sous 24h</strong> sur les demandes standard et <strong>équipe disponible 7j/7</strong> pour les tournages et événements.</p>
+            <p class="section-subtitle approach-note animated-item">Notre approche&nbsp;: <strong>conditions directes, sans surcoût d'agence</strong>, <strong>Premier retour sous 24h</strong> sur les demandes standard et <strong>équipe disponible 7j/7</strong> pour les tournages et événements.</p>
             
             <div class="services-grid-visual">
                 
@@ -285,7 +269,7 @@
                     <a href="/cantine-catering/" class="service-card-visual-link" aria-label="Découvrir les services de cantine et catering"></a>
                     <div class="service-card-visual-image">
                         <!-- Image existante utilisée à des fins illustratives pour la restauration -->
-                        <img src="/images/service-cantine.jpg" alt="Service de cantine et catering par des traiteurs partenaires pour les équipes de tournage." loading="lazy" width="400" height="250">
+                        <img src="/android-chrome-512x512.png" alt="BMS Ventouse — service cantine et catering" loading="lazy" width="400" height="250">
                     </div>
                     <div class="service-card-visual-content">
                         <h3>Cantine &amp; Catering</h3>
@@ -746,7 +730,7 @@
 <!-- ==========================================================================
    SCRIPTS
    ========================================================================== -->
-<script src="/js/script.js" defer></script>
+<script src="/js/script.js?v=bms-20261026-1" defer></script>
 
 </body>
 </html>

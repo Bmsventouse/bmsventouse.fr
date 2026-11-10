@@ -8,21 +8,7 @@
 
     <!-- Google tag (gtag.js) -->
     <!-- Google Analytics 4 (Consent Mode v2) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-V7QXQC5260"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('consent', 'default', {
-        'ad_storage': 'denied',
-        'ad_user_data': 'denied',
-        'ad_personalization': 'denied',
-        'analytics_storage': 'granted',
-        'functionality_storage': 'denied',
-        'security_storage': 'granted'
-      });
-      gtag('js', new Date());
-      gtag('config', 'G-V7QXQC5260', { anonymize_ip: true });
-    </script>
+    <script src="/js/consent.js?v=bms-20261026-1"></script>
 
     <!-- SEO & PARTAGE -->
     <title>Politique de Confidentialité BMS</title>
@@ -48,10 +34,10 @@
     <meta name="twitter:image:alt" content="Dossier de confidentialité et cadenas représentant la protection des données">
 
     <!-- PERFORMANCE & RESSOURCES -->
-    <link rel="preload" href="/css/style.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <link rel="stylesheet" href="/css/style.css">
-    <noscript><link rel="stylesheet" href="/css/style.css"></noscript>
-    <link rel="preload" href="/js/script.js" as="script">
+    <link rel="preload" href="/css/style.css?v=bms-20261026-1" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <link rel="stylesheet" href="/css/style.css?v=bms-20261026-1">
+    <noscript><link rel="stylesheet" href="/css/style.css?v=bms-20261026-1"></noscript>
+    <link rel="preload" href="/js/script.js?v=bms-20261026-1" as="script">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -60,7 +46,7 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
-    <link rel="shortcut icon" href="/favicon.ico">
+    <link rel="shortcut icon" href="/favicon-32x32.png">
 
     <!-- DONNÉES STRUCTURÉES (page d’information) -->
     <script type="application/ld+json">
@@ -120,7 +106,7 @@
         </div>
     </div>
     <div class="promo-banner" id="promoBanner">
-        <p><strong>Réponse rapide sous 24h</strong></p>
+        <p><strong>Premier retour sous 24h</strong></p>
     </div>
 </header>
 
@@ -217,7 +203,7 @@
                     <li><strong>Données de contact &amp; devis :</strong> en règle générale, jusqu’à <strong>3 ans</strong> après le dernier échange ou dernier contact actif, sauf obligation légale contraire.</li>
                     <li><strong>Journaux techniques :</strong> journaux de sécurité et logs serveurs, généralement conservés <strong>jusqu’à 12 mois</strong> par l’hébergeur, puis supprimés ou anonymisés.</li>
                     <li><strong>Cookies de mesure d’audience :</strong> les durées de conservation paramétrées dans Google Analytics 4 sont limitées au strict nécessaire (statistiques agrégées) et peuvent être ajustées dans l’interface Google Analytics.</li>
-                    <li><strong>Cookie de consentement :</strong> le cookie interne de consentement (par exemple <code>bms_cookie_consent</code>) est conservé pour une durée maximale de <strong>6 à 12 mois</strong> pour éviter de vous redemander le choix trop fréquemment.</li>
+                    <li><strong>Cookie de consentement :</strong> la préférence locale de consentement (par exemple <code>bms_cookie_consent</code>) est conservé pour une durée maximale de <strong>6 mois</strong> pour éviter de vous redemander le choix trop fréquemment.</li>
                 </ul>
             </article>
 
@@ -234,7 +220,7 @@
                 <h3>5.2 Cookies et traceurs de mesure d’audience</h3>
                 <p>Avec votre accord, nous utilisons&nbsp;:</p>
                 <ul>
-                    <li><strong>Google Analytics 4 (GA4)</strong> pour mesurer la fréquentation du site, les pages visitées, les types d’appareils, et les actions importantes (clics vers la page Contact, clics téléphone, WhatsApp, email). Les adresses IP sont anonymisées et aucune donnée n’est utilisée à des fins de publicité personnalisée.</li>
+                    <li><strong>Google Analytics 4 (GA4)</strong> pour mesurer la fréquentation du site, les pages visitées, les types d’appareils, et les actions importantes (clics vers la page Contact, clics téléphone, WhatsApp, email). Les adresses IP ne sont pas stockées dans GA4 et aucune donnée n’est utilisée à des fins de publicité personnalisée.</li>
                     <li><strong>Microsoft Clarity</strong> pour visualiser, de manière anonymisée, des sessions d’utilisation (cartes de chaleur, parcours), uniquement à des fins d’amélioration ergonomique.</li>
                 </ul>
                 <p>Ces outils sont <strong>désactivés par défaut</strong>. Ils ne sont activés que si vous cliquez sur “Accepter” dans le bandeau cookies. Vous pouvez refuser en cliquant sur “Refuser”.</p>
@@ -242,7 +228,7 @@
                 <h3>5.3 Gérer vos préférences</h3>
                 <p>Vous pouvez à tout moment modifier votre choix&nbsp;:</p>
                 <ul>
-                    <li>En cliquant sur le lien <strong>« Gérer les cookies »</strong> en bas de page (footer), qui réinitialise votre consentement et réaffiche la bannière.</li>
+                    <li>En cliquant sur le lien <strong>« Gérer les cookies »</strong> en bas de page (footer), qui réaffiche les choix de consentement ; un retrait désactive les outils et recharge la page.</li>
                     <li>En configurant votre navigateur pour refuser certains cookies.</li>
                 </ul>
             </article>
@@ -425,6 +411,6 @@
     </div>
 </footer>
 
-<script src="/js/script.js" defer></script>
+<script src="/js/script.js?v=bms-20261026-1" defer></script>
 </body>
 </html>
