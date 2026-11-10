@@ -295,10 +295,8 @@ html body.page-accueil .promo-banner strong::before {
 }
 
 /* Utilitaires de spacing (marges verticales) */
-.mt-0 { margin-top: 0 !important; }
 .mb-0 { margin-bottom: 0 !important; }
 
-.mt-xs { margin-top: 0.5rem !important; }
 .mt-sm { margin-top: 0.75rem !important; }
 .mt-md { margin-top: 1rem !important; }
 .mt-lg { margin-top: 1.5rem !important; }
@@ -310,8 +308,6 @@ html body.page-accueil .promo-banner strong::before {
 .mb-xs { margin-bottom: 0.5rem !important; }
 .mb-sm { margin-bottom: 0.75rem !important; }
 .mb-md { margin-bottom: 1rem !important; }
-.mb-lg { margin-bottom: 1.5rem !important; }
-.mb-xl { margin-bottom: 2rem !important; }
 
 /* Header sticky */
 .header {
@@ -325,19 +321,6 @@ html body.page-accueil .promo-banner strong::before {
   -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--color-border);
   transition: transform 0.3s ease, background 0.4s;
-}
-
-.header.header-hidden {
-  transform: translateY(-100%);
-}
-
-.header.header-transparent {
-  background: transparent;
-  border-bottom: none;
-}
-
-.header.header-transparent .nav-link {
-  color: #ffffff;
 }
 
 body.dark-theme .header { 
@@ -1072,18 +1055,6 @@ body.dark-theme .header {
   display: inline-block;
 }
 
-.badge-netflix { 
-  background: rgba(229, 9, 20, 0.1); 
-  color: #e50914; 
-  border-color: rgba(229, 9, 20, 0.2); 
-}
-
-.badge-jo { 
-  background: rgba(255, 215, 0, 0.1); 
-  color: #b7950b; 
-  border-color: rgba(255, 215, 0, 0.2); 
-}
-
 /* FAQ composant */
 .faq-container {
   display: grid;
@@ -1618,13 +1589,6 @@ body.dark-theme .fw-popup-close:focus {
   gap: 1rem;
 }
 
-.testimonial-card footer .client-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
 .testimonial-card footer span { 
   color: var(--color-primary); 
 }
@@ -1714,30 +1678,6 @@ body.dark-theme .fw-popup-close:focus {
   margin-bottom: 1rem;
 }
 
-.case-challenge {
-  font-weight: var(--font-weight-medium);
-  margin-bottom: 1.5rem;
-  line-height: 1.5;
-}
-
-.case-solution {
-  list-style: none;
-  margin-bottom: 1.5rem;
-}
-
-.case-solution li {
-  margin-bottom: 0.5rem;
-  display: flex;
-  align-items: flex-start;
-}
-
-.case-solution i {
-  color: var(--color-primary);
-  margin-right: 0.8rem;
-  margin-top: 4px;
-  flex-shrink: 0;
-}
-
 .testimonial-inline {
   border-left: 3px solid var(--color-primary);
   padding-left: 1.5rem;
@@ -1763,27 +1703,6 @@ body.dark-theme .fw-popup-close:focus {
 .testimonial-inline footer { 
   font-weight: var(--font-weight-bold); 
   margin-top: 0.5rem; 
-}
-
-.references-logos {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 2rem;
-}
-
-.references-logos img {
-  height: 45px;
-  opacity: 0.7;
-  transition: opacity 0.3s, transform 0.3s;
-  filter: grayscale(100%);
-}
-
-.references-logos img:hover { 
-  opacity: 1; 
-  transform: translateY(-3px);
-  filter: grayscale(0%);
 }
 
 /* WhatsApp float */
