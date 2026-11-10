@@ -108,6 +108,16 @@ function pages(dir = '.') {
       return b.left >= 0 && b.right <= innerWidth &&
         b.top >= 0 && b.bottom <= innerHeight;
     }), true, '320px mobile: cookie controls fit within the screen');
+    // Banner must overlay the viewport even after scrolling deep into the page.
+    assert.equal(await mobile.locator('#cookie-banner').evaluate(el =>
+      getComputedStyle(el).position), 'fixed', 'Cookie banner must be fixed to the viewport');
+    await mobile.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    await mobile.waitForTimeout(120);
+    assert.equal(await mobile.locator('#cookie-banner').evaluate(el => {
+      const box = el.getBoundingClientRect();
+      return box.top >= 0 && box.bottom <= innerHeight &&
+        box.left >= 0 && box.right <= innerWidth;
+    }), true, 'Cookie banner remains in viewport after scrolling to footer');
     assert.equal(await mobile.locator('#cookie-decline').isVisible(), true);
     assert.equal(await mobile.locator('#cookie-accept').isVisible(), true);
     await mobile.locator('#cookie-decline').focus();
