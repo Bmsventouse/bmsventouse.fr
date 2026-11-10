@@ -30,3 +30,22 @@ test('Ventousage Paris hero unclamped and commercial page links preserved',()=>{
     assert.ok(html.includes('href="'+link+'"'),link);
   }
 });
+
+test('Quick quote form is real Netlify HTML with fields, anti-spam and confirmation',()=>{
+  assert.ok(html.includes('name="ventousage-paris-devis" method="POST"'));
+  assert.ok(html.includes('data-netlify="true"'));
+  assert.ok(html.includes('netlify-honeypot="bot-field"'));
+  assert.ok(html.includes('action="/merci-devis/"'));
+  for(const name of ['dates','lieu','besoin','email']) assert.ok(html.includes('name="'+name+'"'));
+  const thanks=fs.readFileSync(path.resolve(__dirname,'../merci-devis/index.html'),'utf8');
+  assert.ok(thanks.includes('Votre demande a été transmise'));
+  assert.ok(thanks.includes('noindex'));
+});
+test('Mobile sticky actions, real case proofs and consent compatibility exist',()=>{
+  assert.ok(html.includes('class="bms-vp-mobile-actions"'));
+  assert.ok(html.includes('id="vp-cas-reels"'));
+  assert.ok(html.includes('id="vp-galerie"'));
+  assert.ok(html.includes('id="devis-ventousage-paris"'));
+  const css=fs.readFileSync(path.resolve(__dirname,'../css/pages.css'),'utf8');
+  assert.ok(css.includes(':has(#cookie-banner)'));
+});
