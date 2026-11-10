@@ -145,3 +145,11 @@ test('CSS cleanup keeps one definitive hero ruleset and no empty notranslate sel
   assert.match(pages, /\/\* Ajustement des titres de Héros/);
   assert.doesNotMatch(overrides, /\.notranslate\s*\{\s*(?:\/\*[\s\S]*?\*\/\s*)?\}/);
 });
+
+test('mobile navigation CSS uses dynamic viewport height after its vh fallback', () => {
+  const css = fs.readFileSync('css/overrides.css', 'utf8');
+  const nav = css.match(/\.nav-links\.active\s*\{([^}]+)\}/)?.[1] || '';
+  const fallback = nav.indexOf('height: calc(100vh -');
+  const dynamic = nav.indexOf('height: calc(100dvh -');
+  assert.ok(fallback >= 0 && dynamic > fallback, '100dvh must override 100vh on mobile');
+});
