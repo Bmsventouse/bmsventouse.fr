@@ -49,3 +49,23 @@ test('deployed CSP policies remain identical between Netlify config files', () =
   }
   assert.match(headerPolicy[1], /frame-ancestors 'none'/);
 });
+
+test('homepage promotional banner has accessible copy matching its visible message', () => {
+  const html = fs.readFileSync('index.html', 'utf8');
+  const css = fs.readFileSync('css/style.css', 'utf8');
+  const promo = html.match(/<div class="promo-banner" id="promoBanner">([\s\S]*?)<\/div>/);
+  assert.ok(promo, 'Homepage banner exists');
+  assert.match(promo[1], /<strong>Premier retour sous 24 h<\/strong>/);
+  assert.doesNotMatch(promo[1], /350\s*€/);
+  assert.match(css, /body\.page-accueil \.promo-banner strong::before\s*{\s*content:\s*none;/);
+  assert.match(css, /body\.page-accueil \.promo-banner strong\s*{\s*font-size:\s*0\.95rem;/);
+});
+
+test('homepage copy does not contain contradictory office locations or legacy year', () => {
+  const html = fs.readFileSync('index.html', 'utf8');
+  const script = fs.readFileSync('js/script.js', 'utf8');
+  assert.doesNotMatch(html, /Basée à Paris|Basée en Île|basée en Seine/);
+  assert.doesNotMatch(html, /des <strong>Premier retour/);
+  assert.doesNotMatch(html, /&copy; 2025 BMS Ventouse/);
+  assert.doesNotMatch(script, /&copy; 2025 BMS Ventouse/);
+});
