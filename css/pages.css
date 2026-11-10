@@ -271,3 +271,12 @@ body.page-ventousage-paris .hero-overlay p {
   margin-bottom: 0.9rem;
   text-wrap: pretty;
 }
+
+/* Sécurité plateaux : description du héros entière sur tous les écrans. */
+body.page-securite-plateaux .hero-overlay p {
+  display: block;
+  -webkit-line-clamp: unset;
+  overflow: visible;
+  max-width: 44rem;
+  margin: 0 auto 0.9rem;
+}
