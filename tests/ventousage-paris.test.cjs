@@ -4,16 +4,16 @@ const html=fs.readFileSync(path.resolve(__dirname,'../ventousage-paris/index.htm
 const count=s=>html.split(s).length-1;
 test('Core SEO and direct quotation buttons',()=>{
   assert.equal(count('<h1'),1);
-  assert.ok(html.includes('Ventousage Paris : ventouseur'));
+  assert.match(html, /Ventousage Paris<\/span> : ventouseur/);
   assert.ok(!html.includes('Vos Places Libres à 100%'));
-  assert.equal(count('href="mailto:contact@bmsventouse.fr?subject='),1);
+  assert.equal(count('href="mailto:contact@bmsventouse.fr"'),1);
   assert.ok(html.includes('href="#devis-ventousage-paris"'));
 });
 test('Unique FAQs and headings',()=>{
   const hs=[...html.matchAll(/<h2\b[^>]*>([\s\S]*?)<\/h2>/g)].map(m=>m[1].replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim());
   assert.equal(hs.length,new Set(hs).size);
   assert.equal(count('Questions fréquentes —'),1);
-  assert.equal(count('<section'),11);
+  assert.equal(count('<section'),10);
   assert.ok(html.includes('Que fait un ventouseur à Paris'));
 });
 test('Current AOT process and structured schema validity',()=>{
@@ -63,8 +63,8 @@ test('Single, correctly placed form and no unauthorized discount or repeated sal
   assert.equal(count('<form'),1);
   assert.ok(!html.includes('Offre promotionnelle : 350'));
   assert.ok(!html.includes('Drancy'));
-  assert.ok(html.indexOf('id="vp-cas-reels"') < html.indexOf('id="devis-ventousage-paris"'));
-  assert.ok(html.indexOf('id="devis-ventousage-paris"') < html.indexOf('Démarches officielles'));
+  assert.match(html, /<\/section>\s*<section class="section bms-vp-lead" id="devis-ventousage-paris"/);
+  assert.ok(html.indexOf('id="devis-ventousage-paris"') < html.indexOf('Ce que comprend notre service'));
   assert.equal(count('Missions réelles de ventousage à Paris'),1);
   assert.equal(count("Zones d'intervention à Paris"),1);
 });
