@@ -1,45 +1,38 @@
-# Convention CSS — BMS Ventouse (état réel)
+# CSS BMS Ventouse — architecture modulaire
 
-## Source effectivement servie
+## Règle principale
 
-Le site statique charge **`/css/style.css?v=...`** comme feuille principale. Ce fichier est un **CSS déjà combiné** : il contient des blocs `base`, `layout`, `components`, `sections`, `pages` et des ajustements supplémentaires. Il **n'importe pas** les six feuilles séparées au moyen de `@import`.
+**Les fichiers `css/*.css` ci-dessous sont les sources maintenues.**
+`css/style.css` est désormais **généré automatiquement** à partir de ces modules, dans un ordre fixe. Les pages continuent de charger une seule feuille CSS `/css/style.css?v=...`. Pas de framework, pas de dépendance CSS ni de chargement multiple.
 
-Le `npm run build` actuel ne regroupe **pas** les fichiers CSS. Il prépare les images et les remplacements d'adresse e-mail uniquement. Modifier une feuille séparée **ne modifie donc pas automatiquement** le rendu en production.
+| Ordre | Source | Rôle |
+| --- | --- | --- |
+| 1 | `css/base.css` | Variables, reset, typographie, styles globaux |
+| 2 | `css/layout.css` | Structure, menu, grille, pied de page |
+| 3 | `css/components.css` | Boutons, cartes et composants communs |
+| 4 | `css/faq.css` | Styles de l'accordéon FAQ |
+| 5 | `css/animations.css` | Animations, états visuels et interactions |
+| 6 | `css/sections.css` | Sections de pages : hero, CTA, carrousel, bannière |
+| 7 | `css/pages.css` | Styles spécifiques à certaines pages |
+| 8 | `css/overrides.css` | Règles historiques de compatibilité à résorber |
 
-## Rôle des fichiers existants
+**Important :** la séparation initiale a été reconstruite **à l'identique** à partir du CSS combiné qui faisait autorité. L'ordre des sélecteurs et la cascade ont été préservés, y compris certains ajustements historiques qui seront revus lors des audits par page. Ne pas déplacer une règle entre modules sans examiner sa priorité et tester les pages affectées.
 
-- `css/style.css` : **source utilisée par le navigateur et référence pour les modifications visuelles** tant qu'aucune compilation CSS n'est mise en place.
-- `css/base.css` : découpage de référence des variables et règles globales.
-- `css/layout.css` : découpage de référence des structures et de la navigation.
-- `css/components.css` : découpage de référence des boutons et autres composants.
-- `css/sections.css` : découpage de référence des blocs de page.
-- `css/pages.css` : découpage de référence des particularités de page.
-- `css/faq.css` : découpage de référence de la FAQ.
+## Comment modifier le design
 
-Ces six fichiers existent mais **ne sont pas la source compilée** de `style.css` : leurs contenus peuvent diverger. Ils ne doivent pas être traités comme des composants automatiquement synchronisés.
+1. Éditer le fichier source correspondant au composant ou à la page. **Ne pas modifier directement `css/style.css`.**
+2. Lancer `npm run build:css` pour régénérer `css/style.css`.
+3. Lancer `npm test` : cette commande commence par `npm run check:css` et échoue si le fichier généré ne correspond plus aux sources. Elle lance ensuite les tests Node existants.
+4. Vérifier le comportement sur mobile et ordinateur (notamment menu, cookies, boutons et sections critiques) avant validation.
+5. Commiter **les fichiers sources et `css/style.css` généré ensemble**, afin que le dépôt et les déploiements statiques directs restent cohérents.
 
-## Règles de maintenance en vigueur
+La commande Netlify `npm run build` exécute `build:css` avant les autres tâches existantes. `npm run check:css` **vérifie uniquement** l'équivalence et ne modifie aucun fichier.
 
-1. Modifier `css/style.css` lorsqu'une règle doit effectivement changer sur le site. Cibler d'abord les règles existantes, sans empiler d'overrides.
-2. Ne **pas** ajouter dans les pages des liens vers les fichiers CSS secondaires : cela multiplierait les requêtes et pourrait changer la cascade.
-3. Pour une correction commune (bouton, bannière, menu, FAQ), tester les pages concernées sur mobile et ordinateur.
-4. Pour une correction propre à une page, utiliser un sélecteur limité à cette page lorsque nécessaire.
-5. Ne pas modifier seulement un fichier secondaire en pensant qu'il sera déployé.
-6. Maintenir **une seule feuille principale** tant qu'une migration complète, testée et mesurée vers des sources modulaires n'est pas décidée.
+## Risques et règles de stabilité
 
-## Architecture cible confirmée par BMS
-
-**Objectif de maintenance :** les fichiers `base.css`, `layout.css`, `components.css`, `sections.css`, `pages.css` et `faq.css` deviennent les **sources éditables**. Une étape de build produit automatiquement un seul `style.css` à charger sur les pages. Il ne doit plus y avoir deux versions indépendantes des règles.
-
-**Attention : cette architecture cible n'est PAS encore appliquée.** Les modules et `style.css` ont divergé. Par exemple, `sections.css` est nettement plus long que le bloc « sections » actuellement inclus dans `style.css`. Une simple concaténation modifierait potentiellement le rendu de plusieurs pages.
-
-### Migration sans régression (à réaliser)
-
-1. Inventorier les règles et overrides de `style.css` et des modules séparés, en identifiant les doublons, les différences et leur ordre dans la cascade.
-2. Reconstituer des **sources modulaires strictement équivalentes au CSS actuellement chargé**, sans introduire au passage des changements visuels non validés.
-3. Ajouter au build un script léger qui concatène les sources dans un ordre explicite et déterministe, sans framework ni dépendance supplémentaire.
-4. Comparer automatiquement le CSS généré à la référence actuelle puis exécuter les tests HTML, accessibilité, navigation, cookies et captures mobiles/ordinateur.
-5. Lorsque le résultat est validé, faire de `style.css` un **fichier généré** et placer chaque nouvelle règle uniquement dans le module approprié.
-6. Déployer uniquement après accord explicite de BMS et vérifier à nouveau les pages représentatives sur le site publié.
-
-**Pendant cette migration :** `style.css` reste la seule feuille servie et fait autorité sur le rendu. Aucun basculement de build n'est autorisé tant que l'équivalence visuelle et fonctionnelle n'est pas démontrée.
+- Conserver le point d'entrée CSS unique : ne pas ajouter les modules en `<link>` ou en `@import` dans les pages.
+- Respecter l'ordre des modules : le modifier peut changer le rendu même si les règles CSS restent identiques.
+- Limiter les nouveaux sélecteurs aux composants / pages nécessaires et éviter les overrides en cascade.
+- L'ancienne arborescence contenait des versions divergentes des mêmes règles ; elles ont été remplacées par les modules reconstruits à partir de la version réellement utilisée.
+- Une compilation **identique en texte** ne prouve pas à elle seule la compatibilité de chaque écran : les tests de navigateur et une revue visuelle restent requis lors des changements de design.
+- En production, les URL des ressources gardent actuellement un identifiant de version. Prévoir une invalidation du cache lors du déploiement validé pour que les visiteurs voient les dernières modifications.
