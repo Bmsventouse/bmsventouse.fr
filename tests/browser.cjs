@@ -94,15 +94,94 @@ function pages(dir = '.') {
     assert.ok(!await p.evaluate(() => document.cookie.includes('_ga=')));
     assert.deepEqual(errors, []);
     await c.close();
+
+    // Small mobile viewport: banner stays accessible, refuse is as easy as accept,
+    // and changing a stored choice never creates duplicate third-party loaders.
+    const { c: small, errors: smallErrors, measures: smallMeasures } = await context(320);
+    const mobile = await small.newPage();
+    await mobile.setViewportSize({ width: 320, height: 568 });
+    await mobile.goto(base + '/');
+    assert.equal(await mobile.locator('#cookie-banner').count(), 1);
+    assert.equal(smallMeasures.length, 0);
+    assert.equal(await mobile.evaluate(() => {
+      const b = document.getElementById('cookie-banner').getBoundingClientRect();
+      return b.left >= 0 && b.right <= innerWidth &&
+        b.top >= 0 && b.bottom <= innerHeight;
+    }), true, '320px mobile: cookie controls fit within the screen');
+    // Banner must overlay the viewport even after scrolling deep into the page.
+    assert.equal(await mobile.locator('#cookie-banner').evaluate(el =>
+      getComputedStyle(el).position), 'fixed', 'Cookie banner must be fixed to the viewport');
+    await mobile.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    await mobile.waitForTimeout(120);
+    assert.equal(await mobile.locator('#cookie-banner').evaluate(el => {
+      const box = el.getBoundingClientRect();
+      return box.top >= 0 && box.bottom <= innerHeight &&
+        box.left >= 0 && box.right <= innerWidth;
+    }), true, 'Cookie banner remains in viewport after scrolling to footer');
+    assert.equal(await mobile.locator('#cookie-decline').isVisible(), true);
+    assert.equal(await mobile.locator('#cookie-accept').isVisible(), true);
+    await mobile.locator('#cookie-decline').focus();
+    await mobile.keyboard.press('Enter');
+    assert.equal(await mobile.locator('#cookie-banner').count(), 0);
+    assert.equal(await mobile.evaluate(() => window.BMSAnalytics.allowed()), false);
+    assert.equal(smallMeasures.length, 0);
+    await mobile.reload();
+    assert.equal(await mobile.locator('#cookie-banner').count(), 0);
+    await mobile.locator('.manage-cookies').first().click();
+    assert.equal(await mobile.locator('#cookie-banner').count(), 1);
+    await mobile.locator('#cookie-accept').focus();
+    await mobile.keyboard.press('Enter');
+    await mobile.waitForFunction(() => document.querySelectorAll('#bms-google-tag,#bms-gtm,#bms-clarity').length === 3);
+    assert.equal(smallMeasures.length, 3);
+    await mobile.locator('.manage-cookies').first().click();
+    await mobile.locator('#cookie-accept').click();
+    assert.equal(smallMeasures.length, 3, 'Reaccept must not duplicate trackers');
+    assert.deepEqual(smallErrors, []);
+    await small.close();
+
     // Check every document on narrow mobile and representative routes on desktop.
     for (const width of [360, 1280]) {
       const { c, errors } = await context(width, 'denied');
       const p = await c.newPage();
+      // Capture layout shifts from the first paint, before page scripts run.
+      // Diagnostic only: third-party calls are mocked in this test environment.
+      if (width === 360) {
+        await p.addInitScript(() => {
+          window.__bmsLayoutShifts = [];
+          try {
+            const observer = new PerformanceObserver(list => {
+              for (const entry of list.getEntries()) {
+                if (entry.hadRecentInput) continue;
+                window.__bmsLayoutShifts.push({
+                  value: entry.value,
+                  sources: (entry.sources || []).slice(0, 5).map(source => {
+                    const node = source.node;
+                    if (!node) return '(detached)';
+                    const id = node.id ? '#' + node.id : '';
+                    const cls = node.classList ? '.' + [...node.classList].slice(0, 3).join('.') : '';
+                    return (node.tagName || 'node').toLowerCase() + id + cls;
+                  })
+                });
+              }
+            });
+            observer.observe({ type: 'layout-shift', buffered: true });
+          } catch (_) { /* Browser does not expose layout-shift entries. */ }
+        });
+      }
       const paths = width === 360 ? pages().map(f => '/' + f.replace(/^\.\//, '')) :
         ['/', '/contact/', '/contact-direct/', '/contact-nfc/', '/services/', '/cantine-catering/', '/logistique-val-d-oise/', '/transport-materiel-audiovisuel-paris/', '/infos-ia/', '/en/'];
       for (const path of paths) {
         await p.goto(base + path);
         await p.waitForTimeout(80);
+        if (width === 360 && (path === '/' || path === '/index.html')) {
+          // Let font swaps and deferred DOM updates settle before reporting.
+          await p.waitForTimeout(1600);
+          const shifts = await p.evaluate(() => window.__bmsLayoutShifts || []);
+          const cls = shifts.reduce((total, entry) => total + entry.value, 0);
+          const top = [...shifts].sort((a, b) => b.value - a.value).slice(0, 5);
+          console.log('[CLS diagnostic] mobile ' + path + ': ' + cls.toFixed(4) +
+            ', sources=' + JSON.stringify(top));
+        }
         assert.equal(await p.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, path + ': overflow');
         assert.ok(await p.evaluate(() => document.styleSheets.length > 0), path + ': styles');
         assert.equal(await p.locator('form').count(), 0, path + ': no unverified form');

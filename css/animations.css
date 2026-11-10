@@ -1,0 +1,297 @@
+/* Animations globales */
+.animated-item {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  will-change: opacity, transform;
+}
+
+.animated-item.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Soulignement animé des nav-link */
+.nav-link::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  width: 60%;
+  height: 2px;
+  background: currentColor;
+  transform: translateX(-50%) scaleX(0);
+  transform-origin: center;
+  transition: transform 0.3s ease;
+  opacity: 0.7;
+}
+
+.nav-link:hover::after,
+.nav-link.active::after {
+  transform: translateX(-50%) scaleX(1);
+}
+
+/* Accent de bordure en haut des cartes */
+.service-card,
+.contact-card,
+.service-card-visual,
+.reference-card,
+.zone-card,
+.stat-item,
+.coverage-note-card {
+  position: relative;
+}
+
+.zone-card svg {
+  margin-bottom: 0.5rem;
+}
+
+.service-card::before,
+.service-card-visual::before,
+.reference-card::before,
+.zone-card::before,
+.stat-item::before,
+.coverage-note-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--color-primary);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.3s ease-out;
+}
+
+.service-card:hover::before,
+.service-card-visual:hover::before,
+.reference-card:hover::before,
+.zone-card:hover::before,
+.stat-item:hover::before,
+.coverage-note-card:hover::before {
+  transform: scaleX(1);
+}
+
+/* Hover boutons CTA */
+.btn:hover,
+.btn:focus {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+  filter: brightness(1.08);
+}
+
+.btn:active {
+  transform: translateY(0) scale(0.98);
+}
+
+/* Dark theme composants */
+body.dark-theme {
+  background: #0f172a;
+  color: #f1f5f9;
+}
+
+body.dark-theme a {
+  color: var(--color-primary);
+}
+
+body.dark-theme a:hover {
+  color: var(--color-primary-dark);
+}
+
+body.dark-theme .section {
+  background: #1e293b;
+}
+
+body.dark-theme .section-subtitle {
+  color: #cbd5e1;
+}
+
+body.dark-theme .service-card,
+body.dark-theme .service-card-visual,
+body.dark-theme .coverage-note-card,
+body.dark-theme .faq-item {
+  background: #1e293b;
+  border-color: #475569;
+  color: #f1f5f9;
+}
+
+body.dark-theme .faq-question {
+  color: #f1f5f9;
+}
+
+body.dark-theme .faq-answer {
+  color: #e2e8f0;
+}
+
+body.dark-theme .btn-secondary {
+  background: transparent;
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+
+body.dark-theme .btn-secondary-alt {
+  background: #111827;
+  border: 1px solid #4b5563;
+  color: #e5e7eb;
+}
+
+body.dark-theme .btn-whatsapp {
+  background-color: #15803d;
+  border-color: #15803d;
+  color: #e5e7eb;
+}
+
+body.dark-theme .btn-whatsapp:hover,
+body.dark-theme .btn-whatsapp:focus {
+  background-color: #166534;
+  border-color: #166534;
+  color: #f9fafb;
+}
+
+body.dark-theme .cta-section {
+  background: linear-gradient(135deg, #0b1220 0%, #1e293b 100%);
+  color: #e5edf5;
+}
+
+body.dark-theme .cta-section .cta-title,
+body.dark-theme .cta-section .cta-subtitle,
+body.dark-theme .cta-section p {
+  color: #e5edf5;
+}
+
+body.dark-theme .footer-bottom-content {
+  color: #cbd5e1;
+}
+
+body.dark-theme .footer-bottom-content a {
+  color: #e5edf5;
+}
+
+body.dark-theme .promo-banner {
+  color: #f9fafb !important;
+}
+
+/* Popup Fashion week (désactivée par JS, conservée pour référence) */
+.fw-popup {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.65);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 1.5rem;
+}
+
+.fw-popup[aria-hidden="false"] {
+  display: flex;
+}
+
+.fw-popup-content {
+  position: relative;
+  background: var(--color-surface, #ffffff);
+  color: var(--color-text, #111111);
+  max-width: 520px;
+  width: 100%;
+  padding: 1.9rem 1.8rem 1.6rem;
+  border-radius: 18px;
+  box-shadow: 0 20px 60px rgba(15, 23, 42, 0.35);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.fw-popup-content h2 {
+  font-size: 1.35rem;
+  margin: 0 0 0.75rem;
+}
+
+.fw-popup-content p {
+  margin: 0 0 1.1rem;
+  line-height: 1.7;
+  font-size: 0.98rem;
+}
+
+.fw-popup-content strong {
+  font-weight: var(--font-weight-bold);
+}
+
+.fw-popup-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.fw-popup-actions .btn {
+  min-width: 0;
+  flex: 1 1 48%;
+}
+
+.fw-popup-close {
+  border: none;
+  background: transparent;
+  font-size: 1.6rem;
+  position: absolute;
+  top: 0.6rem;
+  right: 0.9rem;
+  cursor: pointer;
+  line-height: 1;
+  color: #9ca3af;
+  transition: color 0.2s ease;
+}
+
+.fw-popup-close:hover,
+.fw-popup-close:focus {
+  color: #4b5563;
+}
+
+@media (max-width: 600px) {
+  .fw-popup {
+    padding: 0.75rem;
+    align-items: flex-end;
+  }
+
+  .fw-popup-content {
+    width: 100%;
+    border-radius: 18px 18px 0 0;
+    padding: 1.6rem 1.3rem 1.4rem;
+    max-height: 80vh;
+  }
+
+  .fw-popup-content h2 {
+    font-size: 1.2rem;
+  }
+
+  .fw-popup-content p {
+    font-size: 0.95rem;
+  }
+
+  .fw-popup-actions {
+    flex-direction: column;
+  }
+
+  .fw-popup-actions .btn {
+    width: 100%;
+    flex: 1 1 auto;
+  }
+
+  .fw-popup-close {
+    top: 0.5rem;
+    right: 0.8rem;
+  }
+}
+
+body.dark-theme .fw-popup-content {
+  background: #0b1220;
+  color: #e5e7eb;
+}
+
+body.dark-theme .fw-popup-close {
+  color: #9ca3af;
+}
+
+body.dark-theme .fw-popup-close:hover,
+body.dark-theme .fw-popup-close:focus {
+  color: #e5e7eb;
+}
+

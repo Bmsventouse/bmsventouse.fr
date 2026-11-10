@@ -284,11 +284,19 @@ html[lang="en"] .promo-banner strong::before {
   font-weight: 700;
 }
 
+/* Accueil : le message réellement lu et indexé correspond au message visible.
+   Les autres pages seront harmonisées lors de leur audit page par page. */
+body.page-accueil .promo-banner strong {
+  font-size: 0.95rem;
+}
+
+html body.page-accueil .promo-banner strong::before {
+  content: none;
+}
+
 /* Utilitaires de spacing (marges verticales) */
-.mt-0 { margin-top: 0 !important; }
 .mb-0 { margin-bottom: 0 !important; }
 
-.mt-xs { margin-top: 0.5rem !important; }
 .mt-sm { margin-top: 0.75rem !important; }
 .mt-md { margin-top: 1rem !important; }
 .mt-lg { margin-top: 1.5rem !important; }
@@ -300,8 +308,6 @@ html[lang="en"] .promo-banner strong::before {
 .mb-xs { margin-bottom: 0.5rem !important; }
 .mb-sm { margin-bottom: 0.75rem !important; }
 .mb-md { margin-bottom: 1rem !important; }
-.mb-lg { margin-bottom: 1.5rem !important; }
-.mb-xl { margin-bottom: 2rem !important; }
 
 /* Header sticky */
 .header {
@@ -315,19 +321,6 @@ html[lang="en"] .promo-banner strong::before {
   -webkit-backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--color-border);
   transition: transform 0.3s ease, background 0.4s;
-}
-
-.header.header-hidden {
-  transform: translateY(-100%);
-}
-
-.header.header-transparent {
-  background: transparent;
-  border-bottom: none;
-}
-
-.header.header-transparent .nav-link {
-  color: #ffffff;
 }
 
 body.dark-theme .header { 
@@ -1062,18 +1055,6 @@ body.dark-theme .header {
   display: inline-block;
 }
 
-.badge-netflix { 
-  background: rgba(229, 9, 20, 0.1); 
-  color: #e50914; 
-  border-color: rgba(229, 9, 20, 0.2); 
-}
-
-.badge-jo { 
-  background: rgba(255, 215, 0, 0.1); 
-  color: #b7950b; 
-  border-color: rgba(255, 215, 0, 0.2); 
-}
-
 /* FAQ composant */
 .faq-container {
   display: grid;
@@ -1580,62 +1561,7 @@ body.dark-theme .fw-popup-close:focus {
   border-color: rgba(255, 255, 255, 0.45);
   color: #fff;
 }
-/* Ajustement des titres de Héros pour éviter le texte tronqué sur mobile
-   tout en restant lisible — limité aux petits écrans (smartphones) pour
-   préserver le rendu “grand format” sur tablette/desktop */
-@media (max-width: 600px) {
-  .hero h1 {
-    font-size: clamp(1.6rem, 5.2vw, 2.3rem);
-    line-height: 1.18;
-  }
-}
-
-.hero p {
-  font-size: clamp(1rem, 2vw, 1.2rem);
-  margin-bottom: 1.5rem;
-  opacity: 0.97;
-  max-width: 90vw;
-  margin-left: auto;
-  margin-right: auto;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-}
-
-@media (min-width: 768px) {
-  .hero p {
-    max-width: 38rem;
-  }
-}
-
-.hero-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.1rem;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-}
-
-@media (max-width: 600px) {
-  .hero-buttons {
-    flex-direction: column;
-  }
-}
-
-@media (min-width: 601px) {
-  .hero-buttons {
-    flex-direction: row;
-  }
-}
-
-.hero-buttons .btn {
-  max-width: 100%;
-  min-width: 0;
-  white-space: normal;
-  overflow-wrap: anywhere;
-}
+/* Les réglages finaux du hero sont regroupés dans pages.css. */
 
 .testimonial-card p {
   font-style: italic;
@@ -1661,13 +1587,6 @@ body.dark-theme .fw-popup-close:focus {
   display: flex;
   align-items: center;
   gap: 1rem;
-}
-
-.testimonial-card footer .client-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
 }
 
 .testimonial-card footer span { 
@@ -1759,30 +1678,6 @@ body.dark-theme .fw-popup-close:focus {
   margin-bottom: 1rem;
 }
 
-.case-challenge {
-  font-weight: var(--font-weight-medium);
-  margin-bottom: 1.5rem;
-  line-height: 1.5;
-}
-
-.case-solution {
-  list-style: none;
-  margin-bottom: 1.5rem;
-}
-
-.case-solution li {
-  margin-bottom: 0.5rem;
-  display: flex;
-  align-items: flex-start;
-}
-
-.case-solution i {
-  color: var(--color-primary);
-  margin-right: 0.8rem;
-  margin-top: 4px;
-  flex-shrink: 0;
-}
-
 .testimonial-inline {
   border-left: 3px solid var(--color-primary);
   padding-left: 1.5rem;
@@ -1808,27 +1703,6 @@ body.dark-theme .fw-popup-close:focus {
 .testimonial-inline footer { 
   font-weight: var(--font-weight-bold); 
   margin-top: 0.5rem; 
-}
-
-.references-logos {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 2rem;
-}
-
-.references-logos img {
-  height: 45px;
-  opacity: 0.7;
-  transition: opacity 0.3s, transform 0.3s;
-  filter: grayscale(100%);
-}
-
-.references-logos img:hover { 
-  opacity: 1; 
-  transform: translateY(-3px);
-  filter: grayscale(0%);
 }
 
 /* WhatsApp float */
@@ -2125,16 +1999,6 @@ body.page-contact-nfc .hero-contact-nfc .hero-devis.badge {
   border-radius: 999px;
 }
 
-body.page-contact-nfc .hero-subnote {
-  font-size: 0.9rem;
-  opacity: 0.85;
-  margin-top: 0.5rem;
-}
-
-body.page-contact-nfc .header.header-nfc .nav {
-  justify-content: center;
-}
-
 body.page-contact-nfc .hero-tag {
   margin-bottom: 0.5rem;
   font-size: 0.78rem;
@@ -2237,12 +2101,6 @@ body.dark-theme.page-contact-nfc .hero-contact-nfc .dev-credit a:focus {
 
 /* === Overrides & utilitaires de style.css === */
 
-/* Marqueur notranslate (préserve les termes métier) */
-.notranslate[translate="no"],
-.notranslate {
-  /* Pas de style visuel, uniquement un marqueur pour les traducteurs. */
-}
-
 /* Ajustements spécifiques NFC, WhatsApp mobile et menu mobile
    (déjà en grande partie redéfinis plus haut, conservés pour compatibilité) */
 
@@ -2283,8 +2141,8 @@ body.dark-theme.page-contact-nfc .hero-contact-nfc .dev-credit a:focus {
   box-shadow: var(--box-shadow-base);
   animation: slideInDown 0.3s forwards;
   /* Hauteur restante de l'écran (iOS + fallback) */
-  height: calc(100dvh - var(--promo-banner-height) - var(--header-height));
   height: calc(100vh - var(--promo-banner-height) - var(--header-height));
+  height: calc(100dvh - var(--promo-banner-height) - var(--header-height));
   overflow-y: auto;
 }
 
@@ -2314,14 +2172,6 @@ body:has(.nav-links.active) {
   overflow: hidden;
 }
 
-
-
-
-
-
-
-
-
 /* Consent remains visible without changing BMS contact availability. */
 .cookie-banner {
   position: fixed;
@@ -2338,7 +2188,7 @@ body:has(.nav-links.active) {
   color: var(--color-dark, #101820);
   border: 2px solid var(--color-primary, #ff8c42);
   border-radius: 12px;
-  box-shadow: 0 8px 30px rgb(0 0 0 / 20%);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
 }
 .cookie-banner h2 { margin: 0 0 0.5rem; font-size: 1.1rem; }
 .cookie-banner p { margin: 0; font-size: 0.9rem; line-height: 1.5; }
@@ -2354,7 +2204,7 @@ body:has(.nav-links.active) {
 
 /* Keep secondary contact actions legible over photographic hero backgrounds. */
 .hero .btn-secondary {
-  background-color: rgb(16 24 32 / 90%);
+  background-color: rgba(16, 24, 32, 0.9);
   color: #fff;
   border-color: var(--color-primary);
 }

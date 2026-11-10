@@ -1,8 +1,9 @@
 /* ==========================================================================
-   BMS VENTOUSE – BASE CSS (variables, reset, accessibilité)
+   BMS VENTOUSE – CSS global combiné
+   (base + layout + components + sections + pages + overrides)
    ========================================================================== */
 
-/* 1. VARIABLES GLOBALES & FONDATIONS */
+/* === base.css === */
 :root {
   /* Couleurs principales */
   --color-primary: #FF8C42;       /* Orange de marque */
@@ -72,7 +73,6 @@
 }
 
 /* Thème sombre - avec toggle via classe .dark-theme */
-/* Définition explicite pour le mode sombre forcé via classe */
 body.dark-theme {
   --color-light: #1a202c;
   --color-light-alt: #2d3748;
@@ -84,7 +84,7 @@ body.dark-theme {
   --box-shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.25);
 }
 
-/* 2. RESET & ACCESSIBILITÉ */
+/* RESET & ACCESSIBILITÉ */
 * { 
   margin: 0; 
   padding: 0; 
@@ -97,6 +97,8 @@ html {
   text-size-adjust: 100%;
   -webkit-text-size-adjust: 100%;
   -moz-text-size-adjust: 100%;
+  /* Empêche tout défilement horizontal parasite sur mobile */
+  overflow-x: hidden;
 }
 
 body {
@@ -111,7 +113,7 @@ body {
   transition: background-color 0.4s, color 0.4s;
 }
 
-/* Liens principaux : texte orange cohérent avec la charte */
+/* Liens principaux */
 a {
   color: var(--color-primary);
   text-decoration: none;
@@ -134,7 +136,7 @@ input, button, textarea, select {
   color: inherit;
 }
 
-/* Accessibilité améliorée */
+/* Accessibilité */
 .skip-link {
   position: absolute;
   top: -40px;
@@ -152,8 +154,8 @@ input, button, textarea, select {
   top: 8px; 
 }
 
-/* Le bouton Aller au contenu est disponible au focus pour l'accessibilité (AA/AAA) */
-.visually-hidden {
+.visually-hidden,
+.hidden {
   position: absolute !important;
   width: 1px; 
   height: 1px;
@@ -196,7 +198,7 @@ input, button, textarea, select {
   padding: 0 clamp(15px, 3vw, 20px);
 }
 
-/* Titres globaux : utilisent la police d’affichage de la marque */
+/* Titres globaux */
 h1,
 h2,
 h3 {
@@ -205,7 +207,8 @@ h3 {
   letter-spacing: 0.03em;
 }
 
-/* Texte courant légèrement allégé avec Poppins */
+/* Texte courant */
 p {
   font-weight: 300;
 }
+

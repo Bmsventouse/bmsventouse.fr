@@ -1,4 +1,4 @@
-/* ================== BLOC FAQ FINAL (UTILISER CE BLOC POUR MAINTENANCE) ================== */
+/* FAQ composant */
 .faq-container {
   display: grid;
   gap: 1.5rem;
@@ -19,7 +19,7 @@
 
 .faq-question {
   background-color: var(--color-light);
-  color: var(--color-dark);
+  color: #111827;
   padding: 1rem 1.5rem;
   width: 100%;
   text-align: left;
@@ -31,18 +31,20 @@
 }
 
 .faq-question::after {
-  content: "\f107";
-  font-family: "Font Awesome 6 Free";
-  font-weight: 900;
+  content: "";
   position: absolute;
   right: 1rem;
   top: 50%;
-  transform: translateY(-50%);
+  width: 0.5rem;
+  height: 0.5rem;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: translateY(-50%) rotate(45deg);
   transition: transform 0.3s;
 }
 
 .faq-item.is-open .faq-question::after {
-  transform: translateY(-50%) rotate(180deg);
+  transform: translateY(-50%) rotate(-135deg);
 }
 
 .faq-item.is-open .faq-question {
@@ -56,41 +58,32 @@
   background-color: var(--color-light-alt);
   padding: 0 1.5rem;
   transition: max-height 0.3s cubic-bezier(.4,0,.2,1), padding 0.3s;
-  color: var(--color-text-muted);
+  color: #374151;
+}
+
+.faq-answer p {
+  margin: 0 0 0.75rem;
+}
+
+.faq-answer p:last-child {
+  margin-bottom: 0;
 }
 
 .faq-item.is-open .faq-answer {
   padding: 1rem 1.5rem;
+  animation: faqFade 0.2s ease both;
 }
 
 @media (max-width: 600px) {
-  :root {
-    --promo-banner-height: 70px;
-  }
-  
-  .promo-banner {
-    font-size: 1rem;
-    padding: 0 0.7rem;
-  }
-  
   .faq-answer, 
   .faq-item.is-open .faq-answer {
     padding-left: 0.7rem;
     padding-right: 0.7rem;
   }
-  
-  .btn {
-    min-width: 0;
-    width: 100%;
-    padding: 0.8rem 1rem;
-  }
-  
-  .hero-buttons {
-    width: 100%;
-  }
-  
-  .footer-bottom-content {
-    flex-direction: column;
-    text-align: center;
-  }
 }
+
+@keyframes faqFade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
