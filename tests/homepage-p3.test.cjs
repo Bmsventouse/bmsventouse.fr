@@ -48,3 +48,19 @@ test('Generated stylesheet is an exact concatenation of maintained modules', () 
 test('Homepage lastmod reflects the preview update without changing other URLs', () => {
   assert.match(read('sitemap.xml'), /<loc>https:\/\/bmsventouse\.fr\/</loc>\s*<lastmod>2026-11-10</);
 });
+
+test('Structured service data avoids false physical-local presence and unverified creation date', () => {
+  const blocks = [...html.matchAll(/<script type="application\\/ld\\+json">([\\s\\S]*?)<\\/script>/g)].map(m => JSON.parse(m[1]));
+  const service = blocks.find(x => x['@type'] === 'ProfessionalService');
+  assert.ok(service);
+  assert.equal(service.foundingDate, undefined);
+  assert.equal(service.geo, undefined);
+  assert.equal(service.address, undefined);
+  assert.match(service.hasOfferCatalog.itemListElement[0].itemOffered.description, /stationnement/);
+  assert.doesNotMatch(html, /<meta name="geo.position"/);
+});
+test('Each authorized reference logo appears only once in the homepage carousel', () => {
+  for (const file of ['logo-netflix.png', 'logo-jo2024.svg', 'logo-conseil-regional.svg']) {
+    assert.equal(html.split('src="/images/' + file + '"').length - 1, 1, file);
+  }
+});
