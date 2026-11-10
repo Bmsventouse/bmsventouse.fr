@@ -66,7 +66,7 @@ test('Single, correctly placed form and no unauthorized discount or repeated sal
   assert.ok(html.indexOf('id="vp-cas-reels"') < html.indexOf('id="devis-ventousage-paris"'));
   assert.ok(html.indexOf('id="devis-ventousage-paris"') < html.indexOf('Démarches officielles'));
   assert.equal(count('Missions réelles de ventousage à Paris'),1);
-  assert.equal(count('Zones d\\'intervention à Paris'),1);
+  assert.equal(count("Zones d'intervention à Paris"),1);
 });
 test('Conversion event is allowed by consent-safe analytics',()=>{
   const consent=fs.readFileSync(path.resolve(__dirname,'../js/consent.js'),'utf8');
