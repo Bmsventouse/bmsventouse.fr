@@ -259,3 +259,15 @@ body.page-accueil #hero-home .hero-overlay p {
   .home-related-services { text-align: left; }
   .home-related-services span { padding: 0 0.2rem; }
 }
+
+/* Ventousage Paris : rendre la présentation complète sans toucher au responsive. */
+body.page-ventousage-paris .hero-overlay p {
+  display: block;
+  -webkit-line-clamp: unset;
+  overflow: visible;
+  max-width: 44rem;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0.9rem;
+  text-wrap: pretty;
+}

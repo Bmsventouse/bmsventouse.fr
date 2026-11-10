@@ -21,3 +21,12 @@ test('Current AOT process and structured schema validity',()=>{
   assert.ok(jsons.length>=1);
   assert.ok(jsons.every(j=>!Array.isArray(j)&&j['@type']!=='FAQPage'));
 });
+
+test('Ventousage Paris hero unclamped and commercial page links preserved',()=>{
+  const css=fs.readFileSync(path.resolve(__dirname,'../css/pages.css'),'utf8');
+  assert.ok(css.includes('body.page-ventousage-paris .hero-overlay p'));
+  assert.ok(css.includes('-webkit-line-clamp: unset'));
+  for(const link of ['/panneaux-demenagement/','/demenagement-aot/','/convoyage-vehicules-decors/','/transport-materiel-audiovisuel-paris/']) {
+    assert.ok(html.includes('href="'+link+'"'),link);
+  }
+});
