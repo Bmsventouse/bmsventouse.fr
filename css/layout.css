@@ -1,6 +1,4 @@
-/* ==========================================================================
-   BMS VENTOUSE – LAYOUT CSS (header, nav, sections, footer)
-   ========================================================================== */
+/* === layout.css === */
 
 /* Sections génériques */
 .section { 
@@ -20,16 +18,12 @@
   font-size: 1.1rem;
   text-align: center;
   margin-bottom: 4rem;
-  /* Texte secondaire plus contrasté */
   color: #4b5563;
   max-width: 700px;
   margin-left: auto;
   margin-right: auto;
 }
 
-/* Ajustements typographiques globaux sur mobile :
-   - sections un peu plus compactes
-   - titres et sous-titres avec marges réduites pour garder plus de contenu "au pli" */
 @media (max-width: 600px) {
   .section {
     padding: 40px 0;
@@ -45,8 +39,6 @@
   }
 }
 
-/* === BLOC CORRIGÉ POUR LA BANNIÈRE ET LE HEADER === */
-
 /* Bannière promo active : bandeau fin sous le header */
 .promo-banner {
   display: block;
@@ -61,9 +53,55 @@
   margin: 0.2rem 0;
 }
 
-/* Header repositionné en sticky */
+/* Texte promo spécifique par langue */
+.promo-banner strong {
+  font-size: 0;
+}
+
+html[lang="fr"] .promo-banner strong::before {
+  content: "Premier retour sous 24h";
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+html[lang="en"] .promo-banner strong::before {
+  content: "First response within 24h";
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+/* Accueil : le message réellement lu et indexé correspond au message visible.
+   Les autres pages seront harmonisées lors de leur audit page par page. */
+body.page-accueil .promo-banner strong {
+  font-size: 0.95rem;
+}
+
+html body.page-accueil .promo-banner strong::before {
+  content: none;
+}
+
+/* Utilitaires de spacing (marges verticales) */
+.mt-0 { margin-top: 0 !important; }
+.mb-0 { margin-bottom: 0 !important; }
+
+.mt-xs { margin-top: 0.5rem !important; }
+.mt-sm { margin-top: 0.75rem !important; }
+.mt-md { margin-top: 1rem !important; }
+.mt-lg { margin-top: 1.5rem !important; }
+.mt-xl { margin-top: 2rem !important; }
+
+/* Line-height utility for texte légèrement plus serré que la base */
+.lh-tight { line-height: 1.6 !important; }
+
+.mb-xs { margin-bottom: 0.5rem !important; }
+.mb-sm { margin-bottom: 0.75rem !important; }
+.mb-md { margin-bottom: 1rem !important; }
+.mb-lg { margin-bottom: 1.5rem !important; }
+.mb-xl { margin-bottom: 2rem !important; }
+
+/* Header sticky */
 .header {
-  position: sticky; /* Fixe le header en haut pour éviter les chevauchements */
+  position: sticky;
   top: 0;
   left: 0; 
   right: 0;
@@ -75,7 +113,6 @@
   transition: transform 0.3s ease, background 0.4s;
 }
 
-/* Header comportement scroll (réactivable via JS) */
 .header.header-hidden {
   transform: translateY(-100%);
 }
@@ -86,7 +123,6 @@
 }
 
 .header.header-transparent .nav-link {
-  /* Texte en blanc pour bon contraste sur hero */
   color: #ffffff;
 }
 
@@ -94,7 +130,7 @@ body.dark-theme .header {
   background: rgba(26,32,44,0.92); 
 }
 
-/* Barre de navigation principale */
+/* Nav */
 .nav {
   display: flex;
   justify-content: space-between;
@@ -135,7 +171,34 @@ body.dark-theme .header {
   color: var(--color-primary); 
 }
 
-/* Texte de marque dans le header */
+/* Ajustements responsives pour éviter que "BMS Ventouse" soit tronqué */
+@media (max-width: 768px) {
+  .logo {
+    font-size: 1.25rem;
+  }
+
+  .logo-text {
+    gap: 0.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo {
+    font-size: 1.15rem;
+  }
+
+  .logo img {
+    width: 32px;
+    height: 32px;
+    margin-right: 8px;
+  }
+
+  .logo-text {
+    gap: 0.2rem;
+  }
+}
+
+/* Texte de marque */
 .logo-text {
   display: inline-flex;
   align-items: center;
@@ -143,13 +206,12 @@ body.dark-theme .header {
   line-height: 1;
 }
 
-/* Assure la visibilité de "Ventouse" dans le header */
 .logo .ventouse {
   color: var(--color-dark);
   font-weight: var(--font-weight-black);
 }
 
-/* Harmonise l'affichage du texte de marque en footer */
+/* Footer brand */
 .footer-brand-text {
   display: inline-flex;
   align-items: center;
@@ -161,7 +223,7 @@ body.dark-theme .header {
   color: var(--color-primary); 
 }
 
-/* Liens de navigation */
+/* Nav links */
 .nav-links {
   display: flex;
   gap: 1rem;
@@ -181,17 +243,15 @@ body.dark-theme .header {
 
 .nav-link:hover,
 .nav-link.active {
-  /* Fond plus sombre + texte blanc pour un meilleur contraste */
   background-color: var(--color-primary-dark);
   color: #ffffff;
   transform: translateY(-2px);
 }
 
-/* Bouton de type nav-link (CTA dans le menu) */
+/* nav-link CTA */
 .nav-link.btn {
   font-weight: var(--font-weight-bold);
   background: var(--color-primary);
-  /* Texte blanc lisible en mode clair comme sombre */
   color: #ffffff;
   padding: 0.6rem 1.4rem;
   border: none;
@@ -204,12 +264,11 @@ body.dark-theme .header {
   transform: scale(1.04);
 }
 
-/* CTA principal dans la nav */
 .nav-cta {
   font-weight: var(--font-weight-bold);
 }
 
-/* Sous-menu de navigation (toutes les pages) */
+/* Sous-menu */
 .nav-links li.has-submenu { position: relative; }
 .submenu-trigger.nav-link { display: inline-flex; align-items: center; gap: .4rem; }
 
@@ -226,11 +285,9 @@ body.dark-theme .header {
   overflow-y: auto;
   padding: .5rem;
   display: none;
-  /* Au-dessus de la bannière promo et du header */
   z-index: var(--z-promo);
 }
 
-/* Affichage du sous-menu au survol ou focus clavier sur desktop */
 .nav-links li.has-submenu:hover .nav-submenu,
 .nav-links li.has-submenu:focus-within .nav-submenu {
   display: block;
@@ -257,7 +314,7 @@ body.dark-theme .header {
   color: var(--color-primary);
 }
 
-/* Groupes dans le sous-menu */
+/* Groupes */
 .nav-submenu .nav-submenu-group { 
   margin: .25rem 0 .5rem; 
 }
@@ -282,8 +339,8 @@ body.dark-theme .header {
   margin: 0; 
 }
 
-/* Sous-menu en mode mobile (et petits laptops) */
-@media (max-width: 1200px) {
+/* Sous-menu mobile */
+@media (max-width: 768px) {
   .nav-links li.has-submenu { width: 100%; }
 
   .nav-submenu {
@@ -305,7 +362,7 @@ body.dark-theme .header {
   }
 }
 
-/* Bouton hamburger */
+/* Hamburger */
 .hamburger {
   display: none;
   flex-direction: column;
@@ -320,23 +377,13 @@ body.dark-theme .header {
   position: relative;
 }
 
-/* Forcer l'affichage du hamburger sur mobile et petits écrans (jusqu'aux petits laptops)
-   tout en laissant le menu visible (fallback si le JS ne s'exécute pas, par exemple en prévisualisation) */
-@media (max-width: 1200px) {
+@media (max-width: 768px) {
   .hamburger {
     display: flex !important;
   }
-
-  /* On laisse .nav-links affiché mais on compacte la mise en page pour éviter le chevauchement */
+  
   .nav-links {
-    flex-wrap: wrap;
-    justify-content: flex-end;
-    gap: 0.5rem;
-  }
-
-  .nav-link {
-    padding: 0.4rem 0.8rem;
-    font-size: 0.95rem;
+    display: none;
   }
 }
 
@@ -349,7 +396,7 @@ body.dark-theme .header {
   border-radius: 2px;
 }
 
-/* Animation hamburger améliorée */
+/* Animation hamburger */
 .hamburger.active span:nth-child(1) {
   transform: translateY(10px) rotate(45deg);
 }
@@ -363,7 +410,7 @@ body.dark-theme .header {
   transform: translateY(-10px) rotate(-45deg);
 }
 
-/* Footer principal */
+/* Footer */
 .footer {
   background: #1e293b;
   color: #f1f5f9;
@@ -376,7 +423,6 @@ body.dark-theme .header {
 
 .footer-content {
   display: grid;
-  /* Colonne marque encore un peu plus étroite pour libérer un maximum d'espace aux 4 colonnes de liens */
   grid-template-columns: minmax(0, 0.9fr) minmax(0, 2.6fr);
   gap: 3rem;
 }
@@ -389,7 +435,6 @@ body.dark-theme .header {
 
 .footer-brand .footer-description {
   color: #cbd5e1;
-  /* Réduite pour compacter davantage la première colonne */
   max-width: 20rem;
   line-height: 1.5;
   margin: 0;
@@ -414,7 +459,6 @@ body.dark-theme .header {
 
 .footer-links {
   display: grid;
-  /* Donne un peu plus de largeur à la colonne "Contact Direct" (3e) et réduit légèrement la colonne "Légal" (4e) */
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1.25fr) minmax(0, 0.75fr);
   gap: 1.75rem;
 }
@@ -425,6 +469,7 @@ body.dark-theme .header {
   }
 }
 
+.footer-column h3,
 .footer-column h4 {
   color: var(--color-primary);
   margin-bottom: 0.75rem;
@@ -432,6 +477,7 @@ body.dark-theme .header {
   position: relative;
 }
 
+.footer-column h3::after,
 .footer-column h4::after {
   content: '';
   position: absolute;
@@ -451,7 +497,7 @@ body.dark-theme .header {
 }
 
 .footer-column a { 
-  color: var(--color-primary); 
+  color: #e5e7eb; 
   transition: color 0.2s, transform 0.2s;
   display: inline-flex;
   align-items: center;
@@ -492,3 +538,4 @@ body.dark-theme .header {
   color: #a0aec0;
   gap: 1rem;
 }
+
