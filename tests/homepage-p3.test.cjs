@@ -50,7 +50,7 @@ test('Homepage lastmod reflects the preview update without changing other URLs',
 });
 
 test('Structured service data avoids false physical-local presence and unverified creation date', () => {
-  const blocks = [...html.matchAll(/<script type="application\\/ld\\+json">([\\s\\S]*?)<\\/script>/g)].map(m => JSON.parse(m[1]));
+  const blocks = [...html.matchAll(new RegExp('<script type="application/ld\\+json">([\\s\\S]*?)</script>', 'g'))].map(m => JSON.parse(m[1]));
   const service = blocks.find(x => x['@type'] === 'ProfessionalService');
   assert.ok(service);
   assert.equal(service.foundingDate, undefined);
