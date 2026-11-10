@@ -2105,6 +2105,101 @@ body.dark-theme.page-contact-nfc .hero-contact-nfc .dev-credit a:focus {
   color: var(--color-primary);
 }
 
+
+/* Accueil P2 — services prioritaires et parcours de demande */
+body.page-accueil #hero-home .hero-overlay p {
+  display: block;
+  -webkit-line-clamp: unset;
+  overflow: visible;
+  max-width: 42rem;
+  margin-bottom: 0.9rem;
+  text-wrap: pretty;
+}
+.section-services-home .section-subtitle { margin-bottom: 2rem; }
+.home-service-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem;
+}
+.home-service-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.8rem;
+  background: var(--color-light);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-large);
+  padding: clamp(1.2rem, 2.7vw, 2rem);
+  box-shadow: var(--box-shadow-base);
+  min-width: 0;
+}
+.home-service-number {
+  font-weight: 800;
+  font-size: 0.82rem;
+  letter-spacing: 0.08em;
+  color: var(--color-primary-dark);
+}
+.home-service-card h3 {
+  font-size: clamp(1.2rem, 2.3vw, 1.5rem);
+  line-height: 1.25;
+  margin: 0;
+}
+.home-service-card h3 a { color: var(--color-dark); }
+.home-service-card h3 a:hover { color: var(--color-primary-dark); }
+.home-service-card p {
+  margin: 0;
+  color: var(--color-text-muted);
+  line-height: 1.55;
+  flex: 1;
+}
+.home-service-link {
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.home-related-services {
+  margin-top: 1.5rem;
+  text-align: center;
+  line-height: 1.8;
+}
+.home-related-services h3 { font-size: 1.1rem; margin-bottom: 0.4rem; }
+.home-related-services p { margin: 0; }
+.home-related-services a { color: var(--color-primary-dark); text-decoration: underline; text-underline-offset: 3px; }
+.home-related-services span { padding: 0 0.45rem; color: var(--color-text-muted); }
+.section-home-process { background: var(--color-light-alt); }
+.home-process-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1.25rem;
+  margin-top: 2rem;
+}
+.home-process-step {
+  min-width: 0;
+  padding: 1.4rem;
+  background: var(--color-light);
+  border-radius: var(--border-radius-large);
+  border: 1px solid var(--color-border);
+}
+.home-process-index {
+  display: inline-grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  background: var(--color-primary-dark);
+  color: #fff;
+  font-weight: 700;
+  margin-bottom: 0.85rem;
+}
+.home-process-step h3 { font-size: 1.12rem; margin-bottom: 0.55rem; }
+.home-process-step p { margin: 0; color: var(--color-text-muted); line-height: 1.55; }
+@media (max-width: 720px) {
+  .home-service-grid { grid-template-columns: 1fr; gap: 0.85rem; }
+  .home-process-grid { grid-template-columns: 1fr; gap: 0.85rem; }
+  .home-related-services { text-align: left; }
+  .home-related-services span { padding: 0 0.2rem; }
+}
 /* === Overrides & utilitaires de style.css === */
 
 /* Ajustements spécifiques NFC, WhatsApp mobile et menu mobile
