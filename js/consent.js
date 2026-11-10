@@ -117,7 +117,8 @@
   };
   const names = new Set([
     'phone_click', 'email_click', 'whatsapp_click', 'lead_contact',
-    'cta_contact_click', 'nfc_page_view', 'contact_card_download'
+    'cta_contact_click', 'nfc_page_view', 'contact_card_download',
+    'quote_form_submit_attempt'
   ]);
   const track = (name, params = {}) => {
     if (choice !== 'granted' || !names.has(name)) return;

@@ -316,3 +316,18 @@ body.page-ventousage-paris .bms-vp-proof { background: var(--color-light-alt); }
   .bms-vp-mobile-secondary { background: #163624; color: #fff !important; }
   body.page-ventousage-paris:has(#cookie-banner) .bms-vp-mobile-actions { display: none; }
 }
+
+/* Ventousage Paris — structure consolidée, formulaire après les missions réelles. */
+body.page-ventousage-paris .hero { height: auto; }
+body.page-ventousage-paris .hero-overlay { position: relative; inset: auto; min-height: clamp(460px, 65vh, 820px); }
+.bms-vp-case-photo { display: flex; align-items: center; flex-wrap: wrap; gap: 1rem; margin-top: 1.25rem; }
+.bms-vp-case-photo img { width: min(100%, 340px); height: auto; border-radius: 10px; }
+.bms-vp-case-photo p { flex: 1; min-width: 180px; }
+.bms-vp-aot-note { margin-top: 1.5rem; }
+.bms-vp-final-cta { margin-top: 2rem; padding: 1.3rem; border: 1px solid var(--color-border); border-radius: 12px; text-align: center; background: var(--color-light-alt); }
+.bms-vp-final-cta p { margin: 0 0 1rem; }
+.bms-vp-final-cta .btn { margin: 0.25rem; }
+@media (max-width: 640px) {
+ body.page-ventousage-paris .whatsapp-float { display: none; }
+ .bms-vp-final-cta .btn { display: flex; justify-content: center; width: 100%; margin: 0.4rem 0; }
+}

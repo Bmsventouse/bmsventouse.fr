@@ -13,6 +13,7 @@ test('Unique FAQs and headings',()=>{
   const hs=[...html.matchAll(/<h2\b[^>]*>([\s\S]*?)<\/h2>/g)].map(m=>m[1].replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim());
   assert.equal(hs.length,new Set(hs).size);
   assert.equal(count('Questions fréquentes —'),1);
+  assert.equal(count('<section'),11);
   assert.ok(html.includes('Que fait un ventouseur à Paris'));
 });
 test('Current AOT process and structured schema validity',()=>{
@@ -56,4 +57,18 @@ test('Form tracking reports only an attempt and contains no personal fields',()=
   assert.ok(js.includes('quote_form_submit_attempt'));
   assert.ok(!js.includes('FormData'));
   assert.ok(html.includes('src="/js/ventousage-paris-leads.js"'));
+});
+
+test('Single, correctly placed form and no unauthorized discount or repeated sales blocks',()=>{
+  assert.equal(count('<form'),1);
+  assert.ok(!html.includes('Offre promotionnelle : 350'));
+  assert.ok(!html.includes('Drancy'));
+  assert.ok(html.indexOf('id="vp-cas-reels"') < html.indexOf('id="devis-ventousage-paris"'));
+  assert.ok(html.indexOf('id="devis-ventousage-paris"') < html.indexOf('Démarches officielles'));
+  assert.equal(count('Missions réelles de ventousage à Paris'),1);
+  assert.equal(count('Zones d\\'intervention à Paris'),1);
+});
+test('Conversion event is allowed by consent-safe analytics',()=>{
+  const consent=fs.readFileSync(path.resolve(__dirname,'../js/consent.js'),'utf8');
+  assert.ok(consent.includes("'quote_form_submit_attempt'"));
 });
