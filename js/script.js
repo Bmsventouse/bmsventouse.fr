@@ -1122,7 +1122,7 @@ function setupUnifiedFooter() {
     footerContent.innerHTML = BMS_TRUSTED_TYPES.html(html);
 
     if (footerBottom) {
-      footerBottom.innerHTML = BMS_TRUSTED_TYPES.html('&copy; 2025 BMS Ventouse. Tous droits réservés. Site réalisé par <a href="https://smarterlogicweb.com" target="_blank" rel="noopener noreferrer">SmarterLogicWeb</a>.');
+      footerBottom.innerHTML = BMS_TRUSTED_TYPES.html('&copy; 2026 BMS Ventouse. Tous droits réservés. Site réalisé par <a href="https://smarterlogicweb.com" target="_blank" rel="noopener noreferrer">SmarterLogicWeb</a>.');
     }
   } catch (_) {
     // non-bloquant
