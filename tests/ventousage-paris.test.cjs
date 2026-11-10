@@ -6,7 +6,8 @@ test('Core SEO and direct quotation buttons',()=>{
   assert.equal(count('<h1'),1);
   assert.ok(html.includes('Ventousage Paris : ventouseur'));
   assert.ok(!html.includes('Vos Places Libres à 100%'));
-  assert.equal(count('href="mailto:contact@bmsventouse.fr?subject='),2);
+  assert.equal(count('href="mailto:contact@bmsventouse.fr?subject='),1);
+  assert.ok(html.includes('href="#devis-ventousage-paris"'));
 });
 test('Unique FAQs and headings',()=>{
   const hs=[...html.matchAll(/<h2\b[^>]*>([\s\S]*?)<\/h2>/g)].map(m=>m[1].replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim());
@@ -48,4 +49,11 @@ test('Mobile sticky actions, real case proofs and consent compatibility exist',(
   assert.ok(html.includes('id="devis-ventousage-paris"'));
   const css=fs.readFileSync(path.resolve(__dirname,'../css/pages.css'),'utf8');
   assert.ok(css.includes(':has(#cookie-banner)'));
+});
+
+test('Form tracking reports only an attempt and contains no personal fields',()=>{
+  const js=fs.readFileSync(path.resolve(__dirname,'../js/ventousage-paris-leads.js'),'utf8');
+  assert.ok(js.includes('quote_form_submit_attempt'));
+  assert.ok(!js.includes('FormData'));
+  assert.ok(html.includes('src="/js/ventousage-paris-leads.js"'));
 });
