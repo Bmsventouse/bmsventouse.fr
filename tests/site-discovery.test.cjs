@@ -113,8 +113,14 @@ test('CSS delivery is a single precombined stylesheet, not disconnected modular 
   const css = fs.readFileSync('css/style.css', 'utf8');
   const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
   assert.doesNotMatch(css, /@import\s+(?:url\()?['"]?[^;]+\.css/, 'Combined CSS must not import more stylesheets');
-  assert.doesNotMatch(pkg.scripts.build, /(?:sass|postcss|tailwind|cssnano|concat|webpack|vite|rollup)/i,
-    'CSS build pipeline has changed: recheck README-css.md');
+  assert.match(pkg.scripts.build, /npm run build:css/, 'Build must generate the primary CSS');
+  assert.match(pkg.scripts.test, /npm run check:css/, 'Tests must reject a stale generated CSS');
+  const modules = [
+    'base.css', 'layout.css', 'components.css', 'faq.css',
+    'animations.css', 'sections.css', 'pages.css', 'overrides.css'
+  ];
+  const combined = modules.map(name => fs.readFileSync(path.join('css', name), 'utf8')).join('');
+  assert.equal(combined, css, 'Generated stylesheet differs from maintained CSS modules');
 
   function checkDir(dir) {
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
