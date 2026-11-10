@@ -35,3 +35,17 @@ test('key landing pages use one blocking primary stylesheet without redundant pr
   const homepage = fs.readFileSync('index.html', 'utf8');
   assert.match(homepage, /<link rel="describedby" href="\/llms\.txt" type="text\/plain">/);
 });
+
+test('deployed CSP policies remain identical between Netlify config files', () => {
+  const headers = fs.readFileSync('_headers', 'utf8');
+  const toml = fs.readFileSync('netlify.toml', 'utf8');
+  const headerPolicy = headers.match(/^\s+Content-Security-Policy: ([^\r\n]+)$/m);
+  const tomlPolicy = toml.match(/^\s+Content-Security-Policy = "([^"\r\n]+)"$/m);
+  assert.ok(headerPolicy, 'Missing _headers CSP');
+  assert.ok(tomlPolicy, 'Missing netlify.toml CSP');
+  assert.equal(headerPolicy[1], tomlPolicy[1], 'Netlify CSP sources disagree');
+  for (const domain of ['https://www.googletagmanager.com', 'https://region1.google-analytics.com']) {
+    assert.ok(headerPolicy[1].includes(domain), 'Missing measurement domain: ' + domain);
+  }
+  assert.match(headerPolicy[1], /frame-ancestors 'none'/);
+});
