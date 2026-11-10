@@ -63,16 +63,6 @@ body.page-contact-nfc .hero-contact-nfc .hero-devis.badge {
   border-radius: 999px;
 }
 
-body.page-contact-nfc .hero-subnote {
-  font-size: 0.9rem;
-  opacity: 0.85;
-  margin-top: 0.5rem;
-}
-
-body.page-contact-nfc .header.header-nfc .nav {
-  justify-content: center;
-}
-
 body.page-contact-nfc .hero-tag {
   margin-bottom: 0.5rem;
   font-size: 0.78rem;
