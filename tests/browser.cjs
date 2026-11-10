@@ -98,11 +98,45 @@ function pages(dir = '.') {
     for (const width of [360, 1280]) {
       const { c, errors } = await context(width, 'denied');
       const p = await c.newPage();
+      // Capture layout shifts from the first paint, before page scripts run.
+      // Diagnostic only: third-party calls are mocked in this test environment.
+      if (width === 360) {
+        await p.addInitScript(() => {
+          window.__bmsLayoutShifts = [];
+          try {
+            const observer = new PerformanceObserver(list => {
+              for (const entry of list.getEntries()) {
+                if (entry.hadRecentInput) continue;
+                window.__bmsLayoutShifts.push({
+                  value: entry.value,
+                  sources: (entry.sources || []).slice(0, 5).map(source => {
+                    const node = source.node;
+                    if (!node) return '(detached)';
+                    const id = node.id ? '#' + node.id : '';
+                    const cls = node.classList ? '.' + [...node.classList].slice(0, 3).join('.') : '';
+                    return (node.tagName || 'node').toLowerCase() + id + cls;
+                  })
+                });
+              }
+            });
+            observer.observe({ type: 'layout-shift', buffered: true });
+          } catch (_) { /* Browser does not expose layout-shift entries. */ }
+        });
+      }
       const paths = width === 360 ? pages().map(f => '/' + f.replace(/^\.\//, '')) :
         ['/', '/contact/', '/contact-direct/', '/contact-nfc/', '/services/', '/cantine-catering/', '/logistique-val-d-oise/', '/transport-materiel-audiovisuel-paris/', '/infos-ia/', '/en/'];
       for (const path of paths) {
         await p.goto(base + path);
         await p.waitForTimeout(80);
+        if (width === 360 && (path === '/' || path === '/index.html')) {
+          // Let font swaps and deferred DOM updates settle before reporting.
+          await p.waitForTimeout(1600);
+          const shifts = await p.evaluate(() => window.__bmsLayoutShifts || []);
+          const cls = shifts.reduce((total, entry) => total + entry.value, 0);
+          const top = [...shifts].sort((a, b) => b.value - a.value).slice(0, 5);
+          console.log('[CLS diagnostic] mobile ' + path + ': ' + cls.toFixed(4) +
+            ', sources=' + JSON.stringify(top));
+        }
         assert.equal(await p.evaluate(() => document.documentElement.scrollWidth > innerWidth), false, path + ': overflow');
         assert.ok(await p.evaluate(() => document.styleSheets.length > 0), path + ': styles');
         assert.equal(await p.locator('form').count(), 0, path + ': no unverified form');
