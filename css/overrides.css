@@ -1,11 +1,5 @@
 /* === Overrides & utilitaires de style.css === */
 
-/* Marqueur notranslate (préserve les termes métier) */
-.notranslate[translate="no"],
-.notranslate {
-  /* Pas de style visuel, uniquement un marqueur pour les traducteurs. */
-}
-
 /* Ajustements spécifiques NFC, WhatsApp mobile et menu mobile
    (déjà en grande partie redéfinis plus haut, conservés pour compatibilité) */
 
@@ -76,14 +70,6 @@
 body:has(.nav-links.active) {
   overflow: hidden;
 }
-
-
-
-
-
-
-
-
 
 /* Consent remains visible without changing BMS contact availability. */
 .cookie-banner {
