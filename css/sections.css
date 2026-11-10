@@ -146,13 +146,6 @@
   gap: 1rem;
 }
 
-.testimonial-card footer .client-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  object-fit: cover;
-}
-
 .testimonial-card footer span { 
   color: var(--color-primary); 
 }
@@ -242,30 +235,6 @@
   margin-bottom: 1rem;
 }
 
-.case-challenge {
-  font-weight: var(--font-weight-medium);
-  margin-bottom: 1.5rem;
-  line-height: 1.5;
-}
-
-.case-solution {
-  list-style: none;
-  margin-bottom: 1.5rem;
-}
-
-.case-solution li {
-  margin-bottom: 0.5rem;
-  display: flex;
-  align-items: flex-start;
-}
-
-.case-solution i {
-  color: var(--color-primary);
-  margin-right: 0.8rem;
-  margin-top: 4px;
-  flex-shrink: 0;
-}
-
 .testimonial-inline {
   border-left: 3px solid var(--color-primary);
   padding-left: 1.5rem;
@@ -291,27 +260,6 @@
 .testimonial-inline footer { 
   font-weight: var(--font-weight-bold); 
   margin-top: 0.5rem; 
-}
-
-.references-logos {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  gap: 2rem;
-}
-
-.references-logos img {
-  height: 45px;
-  opacity: 0.7;
-  transition: opacity 0.3s, transform 0.3s;
-  filter: grayscale(100%);
-}
-
-.references-logos img:hover { 
-  opacity: 1; 
-  transform: translateY(-3px);
-  filter: grayscale(0%);
 }
 
 /* WhatsApp float */
