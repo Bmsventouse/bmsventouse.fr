@@ -136,3 +136,12 @@ test('CSS delivery is a single precombined stylesheet, not disconnected modular 
   }
   checkDir('.');
 });
+
+test('CSS cleanup keeps one definitive hero ruleset and no empty notranslate selector', () => {
+  const sections = fs.readFileSync('css/sections.css', 'utf8');
+  const pages = fs.readFileSync('css/pages.css', 'utf8');
+  const overrides = fs.readFileSync('css/overrides.css', 'utf8');
+  assert.doesNotMatch(sections, /\/\* Ajustement des titres de Héros/);
+  assert.match(pages, /\/\* Ajustement des titres de Héros/);
+  assert.doesNotMatch(overrides, /\.notranslate\s*\{\s*(?:\/\*[\s\S]*?\*\/\s*)?\}/);
+});
