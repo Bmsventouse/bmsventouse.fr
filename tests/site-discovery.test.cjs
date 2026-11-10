@@ -108,3 +108,25 @@ test('sitemap contains precisely the indexable HTML pages with matching canonica
   }
   assert.deepEqual(new Set(urls), indexable, 'Sitemap has extra or missing indexable URLs');
 });
+
+test('CSS delivery is a single precombined stylesheet, not disconnected modular sources', () => {
+  const css = fs.readFileSync('css/style.css', 'utf8');
+  const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
+  assert.doesNotMatch(css, /@import\s+(?:url\()?['"]?[^;]+\.css/, 'Combined CSS must not import more stylesheets');
+  assert.doesNotMatch(pkg.scripts.build, /(?:sass|postcss|tailwind|cssnano|concat|webpack|vite|rollup)/i,
+    'CSS build pipeline has changed: recheck README-css.md');
+
+  function checkDir(dir) {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (entry.name.startsWith('.') || entry.name === 'node_modules') continue;
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) checkDir(full);
+      else if (entry.name.endsWith('.html')) {
+        const html = fs.readFileSync(full, 'utf8');
+        assert.doesNotMatch(html, /(?:href|src)=["']\/css\/(?:base|layout|components|sections|pages|faq)\.css(?:\?[^"']*)?["']/i,
+          full + ': disconnected CSS module referenced directly');
+      }
+    }
+  }
+  checkDir('.');
+});
