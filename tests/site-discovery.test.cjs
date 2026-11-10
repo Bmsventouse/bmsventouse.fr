@@ -25,9 +25,13 @@ test('llms.txt has a canonical site title and an agent-readable link directory',
   }
 });
 
-test('homepage declares its primary CSS before painting and describes llms.txt', () => {
-  const html = fs.readFileSync('index.html', 'utf8');
-  assert.match(html, /<link rel="stylesheet" href="\/css\/style\.css\?v=[^"]+">/);
-  assert.doesNotMatch(html, /<link rel="preload" href="\/css\/style\.css/);
-  assert.match(html, /<link rel="describedby" href="\/llms\.txt" type="text\/plain">/);
+test('key landing pages use one blocking primary stylesheet without redundant preloads', () => {
+  for (const filename of ['index.html', 'services/index.html', 'contact/index.html']) {
+    const html = fs.readFileSync(filename, 'utf8');
+    const styles = html.match(/<link rel="stylesheet" href="\/css\/style\.css\?v=[^"]+">/g) || [];
+    assert.equal(styles.length, 1, filename + ': exactly one primary CSS link');
+    assert.doesNotMatch(html, /<link rel="preload" href="\/css\/style\.css/, filename);
+  }
+  const homepage = fs.readFileSync('index.html', 'utf8');
+  assert.match(homepage, /<link rel="describedby" href="\/llms\.txt" type="text\/plain">/);
 });
