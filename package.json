@@ -15,11 +15,12 @@
   },
   "license": "MIT",
   "scripts": {
-    "test": "npm run check:css && node --test tests/*.test.cjs",
+    "test": "npm run check:css && npm run audit:css && node --test tests/*.test.cjs",
     "build": "npm run build:css && node scripts/generate-responsive-images.js && node scripts/replace-email.js",
     "replace-email": "node scripts/replace-email.js",
     "build:css": "node scripts/build-css.js",
-    "check:css": "node scripts/build-css.js --check"
+    "check:css": "node scripts/build-css.js --check",
+    "audit:css": "node scripts/audit-css-usage.js"
   },
   "dependencies": {
     "sharp": "^0.35.5"
