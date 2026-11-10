@@ -55,7 +55,7 @@ test('homepage promotional banner has accessible copy matching its visible messa
   const css = fs.readFileSync('css/style.css', 'utf8');
   const promo = html.match(/<div class="promo-banner" id="promoBanner">([\s\S]*?)<\/div>/);
   assert.ok(promo, 'Homepage banner exists');
-  assert.match(promo[1], /<strong>Premier retour sous 24 h<\/strong>/);
+  assert.match(promo[1], /<strong>Devis en 24 h<\/strong>/);
   assert.doesNotMatch(promo[1], /350\s*€/);
   assert.match(css, /body\.page-accueil \.promo-banner strong::before\s*{\s*content:\s*none;/);
   assert.match(css, /body\.page-accueil \.promo-banner strong\s*{\s*font-size:\s*0\.95rem;/);
