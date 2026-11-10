@@ -925,11 +925,12 @@ document.addEventListener('DOMContentLoaded', () => {
   // INITIALISATION DE TOUS LES MODULES
   // ==========================================================================
   try {
-    // Construire d'abord le header/nav unifiés, puis activer le mode sombre
+    // Afficher le choix de consentement avant les traitements secondaires.
+    // Il doit rester accessible même si un module de navigation échoue.
+    setupCookieBanner();
     setupUnifiedHeader();
     setupHamburgerMenu();
     setupThemeMode();
-    setupCookieBanner();
     setupSkipLink();
     setupUnifiedFooter();
     setupHeroLayout();
