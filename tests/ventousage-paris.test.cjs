@@ -13,7 +13,7 @@ test('Unique FAQs and headings',()=>{
   const hs=[...html.matchAll(/<h2\b[^>]*>([\s\S]*?)<\/h2>/g)].map(m=>m[1].replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim());
   assert.equal(hs.length,new Set(hs).size);
   assert.equal(count('Questions fréquentes —'),1);
-  assert.equal(count('<section'),10);
+  assert.equal(count('<section'),8);
   assert.ok(html.includes('Que fait un ventouseur à Paris'));
 });
 test('Current AOT process and structured schema validity',()=>{
