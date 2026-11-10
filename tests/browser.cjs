@@ -94,6 +94,41 @@ function pages(dir = '.') {
     assert.ok(!await p.evaluate(() => document.cookie.includes('_ga=')));
     assert.deepEqual(errors, []);
     await c.close();
+
+    // Small mobile viewport: banner stays accessible, refuse is as easy as accept,
+    // and changing a stored choice never creates duplicate third-party loaders.
+    const { c: small, errors: smallErrors, measures: smallMeasures } = await context(320);
+    const mobile = await small.newPage();
+    await mobile.setViewportSize({ width: 320, height: 568 });
+    await mobile.goto(base + '/');
+    assert.equal(await mobile.locator('#cookie-banner').count(), 1);
+    assert.equal(smallMeasures.length, 0);
+    assert.equal(await mobile.evaluate(() => {
+      const b = document.getElementById('cookie-banner').getBoundingClientRect();
+      return b.left >= 0 && b.right <= innerWidth &&
+        b.top >= 0 && b.bottom <= innerHeight;
+    }), true, '320px mobile: cookie controls fit within the screen');
+    assert.equal(await mobile.locator('#cookie-decline').isVisible(), true);
+    assert.equal(await mobile.locator('#cookie-accept').isVisible(), true);
+    await mobile.locator('#cookie-decline').focus();
+    await mobile.keyboard.press('Enter');
+    assert.equal(await mobile.locator('#cookie-banner').count(), 0);
+    assert.equal(await mobile.evaluate(() => window.BMSAnalytics.allowed()), false);
+    assert.equal(smallMeasures.length, 0);
+    await mobile.reload();
+    assert.equal(await mobile.locator('#cookie-banner').count(), 0);
+    await mobile.locator('.manage-cookies').first().click();
+    assert.equal(await mobile.locator('#cookie-banner').count(), 1);
+    await mobile.locator('#cookie-accept').focus();
+    await mobile.keyboard.press('Enter');
+    await mobile.waitForFunction(() => document.querySelectorAll('#bms-google-tag,#bms-gtm,#bms-clarity').length === 3);
+    assert.equal(smallMeasures.length, 3);
+    await mobile.locator('.manage-cookies').first().click();
+    await mobile.locator('#cookie-accept').click();
+    assert.equal(smallMeasures.length, 3, 'Reaccept must not duplicate trackers');
+    assert.deepEqual(smallErrors, []);
+    await small.close();
+
     // Check every document on narrow mobile and representative routes on desktop.
     for (const width of [360, 1280]) {
       const { c, errors } = await context(width, 'denied');
