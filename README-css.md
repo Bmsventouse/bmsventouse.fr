@@ -27,6 +27,19 @@ Ces six fichiers existent mais **ne sont pas la source compilée** de `style.css
 5. Ne pas modifier seulement un fichier secondaire en pensant qu'il sera déployé.
 6. Maintenir **une seule feuille principale** tant qu'une migration complète, testée et mesurée vers des sources modulaires n'est pas décidée.
 
-## Évolution éventuelle
+## Architecture cible confirmée par BMS
 
-Si le volume de maintenance l'exige, une future migration pourra prendre les feuilles modulaires comme sources et produire automatiquement `style.css`, avec une vérification d'équivalence du rendu. **Aucune migration ni nouvelle dépendance n'est nécessaire pour poursuivre l'audit page par page.**
+**Objectif de maintenance :** les fichiers `base.css`, `layout.css`, `components.css`, `sections.css`, `pages.css` et `faq.css` deviennent les **sources éditables**. Une étape de build produit automatiquement un seul `style.css` à charger sur les pages. Il ne doit plus y avoir deux versions indépendantes des règles.
+
+**Attention : cette architecture cible n'est PAS encore appliquée.** Les modules et `style.css` ont divergé. Par exemple, `sections.css` est nettement plus long que le bloc « sections » actuellement inclus dans `style.css`. Une simple concaténation modifierait potentiellement le rendu de plusieurs pages.
+
+### Migration sans régression (à réaliser)
+
+1. Inventorier les règles et overrides de `style.css` et des modules séparés, en identifiant les doublons, les différences et leur ordre dans la cascade.
+2. Reconstituer des **sources modulaires strictement équivalentes au CSS actuellement chargé**, sans introduire au passage des changements visuels non validés.
+3. Ajouter au build un script léger qui concatène les sources dans un ordre explicite et déterministe, sans framework ni dépendance supplémentaire.
+4. Comparer automatiquement le CSS généré à la référence actuelle puis exécuter les tests HTML, accessibilité, navigation, cookies et captures mobiles/ordinateur.
+5. Lorsque le résultat est validé, faire de `style.css` un **fichier généré** et placer chaque nouvelle règle uniquement dans le module approprié.
+6. Déployer uniquement après accord explicite de BMS et vérifier à nouveau les pages représentatives sur le site publié.
+
+**Pendant cette migration :** `style.css` reste la seule feuille servie et fait autorité sur le rendu. Aucun basculement de build n'est autorisé tant que l'équivalence visuelle et fonctionnelle n'est pas démontrée.
