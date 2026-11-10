@@ -40,8 +40,8 @@
   box-shadow: var(--box-shadow-base);
   animation: slideInDown 0.3s forwards;
   /* Hauteur restante de l'écran (iOS + fallback) */
-  height: calc(100dvh - var(--promo-banner-height) - var(--header-height));
   height: calc(100vh - var(--promo-banner-height) - var(--header-height));
+  height: calc(100dvh - var(--promo-banner-height) - var(--header-height));
   overflow-y: auto;
 }
 
