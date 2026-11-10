@@ -861,29 +861,6 @@ document.addEventListener('DOMContentLoaded', () => {
   };
 
   // --------------------------------------------------------------------------
-  // MODULE: UNIFIER LE CHARGEMENT DU CSS (style.css)
-  // --------------------------------------------------------------------------
-  const unifyStylesheetLoading = () => {
-    try {
-      const head = document.head || document.getElementsByTagName('head')[0];
-      if (!head) return;
-      // Supprimer les preload redondants pour style.css
-      head.querySelectorAll('link[rel="preload"][as="style"][href$="/css/style.css"]').forEach(link => {
-        try { link.remove(); } catch (_) {}
-      });
-      // S'assurer qu'un seul link rel="stylesheet" vers style.css reste
-      const sheets = head.querySelectorAll('link[rel="stylesheet"][href$="/css/style.css"]');
-      if (sheets.length > 1) {
-        for (let i = 1; i < sheets.length; i++) {
-          try { sheets[i].remove(); } catch (_) {}
-        }
-      }
-    } catch (_) {
-      // non-bloquant
-    }
-  };
-
-  // --------------------------------------------------------------------------
   // MODULE: PRÉFÉRENCE GAUCHER / DROITIER (placement des actions à une main)
   // --------------------------------------------------------------------------
   const setupHandPreference = () => {
@@ -1008,16 +985,6 @@ document.addEventListener('DOMContentLoaded', () => {
     console.log('🚀 BMS Ventouse - Tous les modules initialisés avec succès');
   } catch (error) {
     console.error("Erreur lors de l'initialisation des scripts du site :", error);
-  } finally {
-    try {
-      if ('requestIdleCallback' in window) {
-        requestIdleCallback(unifyStylesheetLoading);
-      } else {
-        setTimeout(unifyStylesheetLoading, 1500);
-      }
-    } catch (_) {
-      // non-bloquant
-    }
   }
 });
 
