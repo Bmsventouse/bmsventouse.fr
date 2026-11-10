@@ -284,6 +284,16 @@ html[lang="en"] .promo-banner strong::before {
   font-weight: 700;
 }
 
+/* Accueil : le message réellement lu et indexé correspond au message visible.
+   Les autres pages seront harmonisées lors de leur audit page par page. */
+body.page-accueil .promo-banner strong {
+  font-size: 0.95rem;
+}
+
+html body.page-accueil .promo-banner strong::before {
+  content: none;
+}
+
 /* Utilitaires de spacing (marges verticales) */
 .mt-0 { margin-top: 0 !important; }
 .mb-0 { margin-bottom: 0 !important; }
