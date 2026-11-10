@@ -153,3 +153,20 @@ test('mobile navigation CSS uses dynamic viewport height after its vh fallback',
   const dynamic = nav.indexOf('height: calc(100dvh -');
   assert.ok(fallback >= 0 && dynamic > fallback, '100dvh must override 100vh on mobile');
 });
+
+test('removed legacy CSS selectors stay absent while critical dynamic styles remain', () => {
+  const css = fs.readFileSync('css/style.css', 'utf8');
+  for (const removed of [
+    'mt-0', 'mt-xs', 'mb-lg', 'mb-xl', 'header-hidden', 'header-transparent',
+    'badge-netflix', 'badge-jo', 'client-avatar', 'case-challenge',
+    'case-solution', 'references-logos', 'header-nfc', 'hero-subnote'
+  ]) {
+    assert.doesNotMatch(css, new RegExp('\\.' + removed + '(?![\\w-])'),
+      removed + ': obsolete selector was reintroduced');
+  }
+  for (const essential of ['cookie-banner', 'nav-overlay', 'nav-links', 'faq-question',
+    'btn-primary', 'hero-buttons', 'service-card', 'process-grid', 'mt-md']) {
+    assert.match(css, new RegExp('\\.' + essential + '(?![\\w-])'),
+      essential + ': active component selector is missing');
+  }
+});
