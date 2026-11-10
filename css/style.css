@@ -2105,24 +2105,6 @@ body.dark-theme.page-contact-nfc .hero-contact-nfc .dev-credit a:focus {
   color: var(--color-primary);
 }
 
-
-/* Secondary fallback when the visitor has no configured mail application. */
-.hero .hero-contact-fallback {
-  display: block;
-  max-width: 45rem;
-  margin: 0.2rem auto 0;
-  font-size: 0.84rem;
-  line-height: 1.5;
-  color: #fff;
-  opacity: 1;
-  text-shadow: 0 1px 3px rgba(0,0,0,.65);
-}
-.hero .hero-contact-fallback a {
-  color: #fff;
-  font-weight: 700;
-  text-decoration: underline;
-  overflow-wrap: anywhere;
-}
 /* === Overrides & utilitaires de style.css === */
 
 /* Ajustements spécifiques NFC, WhatsApp mobile et menu mobile
