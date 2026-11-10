@@ -317,15 +317,3 @@
   display: inline-block;
 }
 
-.badge-netflix { 
-  background: rgba(229, 9, 20, 0.1); 
-  color: #e50914; 
-  border-color: rgba(229, 9, 20, 0.2); 
-}
-
-.badge-jo { 
-  background: rgba(255, 215, 0, 0.1); 
-  color: #b7950b; 
-  border-color: rgba(255, 215, 0, 0.2); 
-}
-
