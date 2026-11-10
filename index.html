@@ -19,6 +19,7 @@
     <meta name="color-scheme" content="light dark">
     
     <link rel="canonical" href="https://bmsventouse.fr/">
+    <link rel="describedby" href="/llms.txt" type="text/plain">
     <link rel="alternate" href="https://bmsventouse.fr/" hreflang="fr">
     <link rel="alternate" href="https://bmsventouse.fr/en/" hreflang="en">
     <link rel="alternate" href="https://bmsventouse.fr/" hreflang="x-default">
@@ -45,9 +46,8 @@
     <meta name="ICBM" content="48.8566, 2.3522">
     
     <!-- PERFORMANCE & RESSOURCES -->
-    <!-- Chargement non bloquant de la feuille de style principale -->
-    <link rel="preload" href="/css/style.css?v=bms-20261026-1" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="/css/style.css?v=bms-20261026-1"></noscript>
+    <!-- Feuille principale bloquante : éviter un rendu sans CSS et les déplacements visuels au chargement -->
+    <link rel="stylesheet" href="/css/style.css?v=bms-20261026-1">
 
     <!-- Préchargement léger de pages clés pour améliorer la navigation -->
     <link rel="prefetch" href="/services/" as="document">
